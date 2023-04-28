@@ -57,42 +57,29 @@ Activate the pre-commit hooks:
 pre-commit install
 ```
 
-### Add new datasets
+### Add a new dataset
 
 - First, get to know the existing examples and how to use them with the documentation in 
-[`src/autora/synthetic/`](`src/autora/synthetic/`).
+[`src/autora/synthetic/`](src/autora/synthetic/).
 - Duplicate the 
-  [`template_experiment`](`src/autora/synthetic/data/template_experiment.py`) or another 
-  existing experiment in [`src/autora/synthetic/data`](`src/autora/synthetic/data`).
+  [`template_experiment`](src/autora/synthetic/data/template_experiment.py) or another 
+  existing experiment in [`src/autora/synthetic/data`](src/autora/synthetic/data).
 - Ensure that the `register` function at the bottom of the file is updated with the experiment's 
   `id` (can't be the same as any other experiment) and the updated experiment generating 
   function.
+- Ensure that the docstring of the constructing function is updated with a description of the 
+  experiment. 
 - Make sure the file is imported in
-  [`src/autora/synthetic/data/__init__.py`](`src/autora/synthetic/data/__init__.py`).
-- Check that the new experiment can be retrieved using the `retrieve` function.
-- Add code to the template as required. 
+  [`src/autora/synthetic/data/__init__.py`](src/autora/synthetic/data/__init__.py).
+- Check that the new experiment can be retrieved using the `retrieve` function like this:
+  ```shell
+  python -c "from autora.synthetic import retrieve, describe; describe(retrieve('new_experiment_name'))"
+  ```
+- Add code to the template as required.
 
-### Add new dependencies 
-
-In pyproject.toml add the new dependencies under `dependencies`
-
-Install the added dependencies:
-```shell
-pip install -e ".[dev]"
-```
+New experiments can be submitted as pull requests.
 
 ### Publish the package
 
-Update the metadata under `project` in the pyproject.toml file to include name, description, author-name, author-email and version
-
-- Follow the guide here: [https://packaging.python.org/en/latest/tutorials/packaging-projects/](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
-
-Build the package using:
-```shell
-python -m build
-```
-
-Publish the package to PyPI using `twine`:
-```shell
-twine upload dist/*
-```
+This package can be published using GitHub actions – create a new "Release" on the GitHub 
+repository, and Actions will do the rest.

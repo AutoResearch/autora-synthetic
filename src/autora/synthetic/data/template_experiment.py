@@ -68,6 +68,13 @@ def template_experiment(
     added_noise: float = 0.1,
     random_state: int = 42,
 ):
+    """
+    A template for synthetic experiments.
+
+    Parameters:
+        added_noise: standard deviation of gaussian noise added to output
+        random_state: seed for random number generator
+    """
 
     params = dict(
         # Include all parameters here:
