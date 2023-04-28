@@ -1,2 +1,2 @@
 """ Models bundled with AutoRA. """
-from . import expected_value, prospect_theory, weber_fechner, template_experiment
+from . import expected_value, prospect_theory, template_experiment, weber_fechner

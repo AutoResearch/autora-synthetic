@@ -56,15 +56,16 @@ Examples:
 from functools import partial
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 from autora.variable import DV, IV, VariableCollection
-from numpy.typing import ArrayLike
 
 from ..inventory import SyntheticExperimentCollection, register
 
+
 def template_experiment(
     # Add any configurable parameters with their defaults here:
-    name: str ="Template Experiment",
+    name: str = "Template Experiment",
     added_noise: float = 0.1,
     random_state: int = 42,
 ):
@@ -94,13 +95,11 @@ def template_experiment(
     # Define experiment runner
     rng = np.random.default_rng(random_state)
 
-
     def experiment_runner(x: ArrayLike, added_noise_=added_noise):
         """A function which simulates noisy observations."""
         x_ = np.array(x)
-        y = x_ + 1. + rng.normal(0, added_noise_, size=x_.shape)
+        y = x_ + 1.0 + rng.normal(0, added_noise_, size=x_.shape)
         return y
-
 
     ground_truth = partial(experiment_runner, added_noise_=0.0)
     """A function which simulates perfect observations"""
@@ -120,7 +119,6 @@ def template_experiment(
 
         if model is not None:
             plt.plot(x, model.predict(x), label="Fitted Model")
-
 
         plt.xlabel(variables.independent_variables[0].name)
         plt.ylabel(variables.dependent_variables[0].name)

@@ -153,5 +153,7 @@ def weber_fechner_law(
     return collection
 
 
-register("weber-fechner", weber_fechner_law)  # todo: make a better interface for multiple aliases
+register(
+    "weber-fechner", weber_fechner_law
+)  # todo: make a better interface for multiple aliases
 register("weber_fechner", weber_fechner_law)
