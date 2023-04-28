@@ -1,14 +1,38 @@
-# AutoRA Theorist Template
+# AutoRA Synthetic Experiments
 
-## Quickstart Guide
+A package with synthetic experiment data for testing AutoRA theorists and experimentalists.
 
-Install this in an environment using your chosen package manager. In this example we are using virtualenv
+## User Guide
 
-Install:
-- python (3.8 or greater): https://www.python.org/downloads/
-- virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+You will need:
 
-Create a new virtual environment:
+- `python` 3.8 or greater: [https://www.python.org/downloads/](https://www.python.org/downloads/)
+
+Install the synthetic data package:
+
+```shell
+pip install -U "autora-synthetic-data"
+```
+
+!!! success
+    It is recommended to use a `python` environment manager like `virtualenv`.
+
+Check your installation by running:
+```shell
+python -c "from autora.synthetic import retrieve, describe; describe(retrieve('weber_fechner'))"
+```
+
+## Developer Guide
+
+### Get started
+
+Clone the repository (e.g. using [GitHub desktop](https://desktop.github.com), 
+or the [`gh` command line tool](https://cli.github.com)) 
+and install it in "editable" mode in an isolated `python` environment, (e.g. 
+with 
+[virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)) as follows:
+
+In the repository root, create a new virtual environment:
 ```shell
 virtualenv venv
 ```
@@ -23,34 +47,45 @@ Use `pip install` to install the current project (`"."`) in editable mode (`-e`)
 pip install -e ".[dev]"
 ```
 
-## Add your contribution 
-Your autora-subpackage should include (1) your code implementing the desired **theorist**, 
-(2) **unit tests** for this theorist, and (3) respective **documentation**. 
+Run the test cases:
+```shell
+pytest --doctest-modules
+```
 
-### Adding the theorist
-Add your code to the `src/autora/theorist/your_theorist_name/`
+Activate the pre-commit hooks:
+```shell
+pre-commit install
+```
 
-### Adding unit tests
-You may also add tests to `tests/test_theorist_your_theorist_name.py`
+### Add new datasets
 
-### Adding documentation
-You may document your theorist in `docs/index.md`
+- First, get to know the existing examples and how to use them with the documentation in 
+[`src/autora/synthetic/`](`src/autora/synthetic/`).
+- Duplicate the 
+  [`template_experiment`](`src/autora/synthetic/data/template_experiment.py`) or another 
+  existing experiment in [`src/autora/synthetic/data`](`src/autora/synthetic/data`).
+- Ensure that the `register` function at the bottom of the file is updated with the experiment's 
+  `id` (can't be the same as any other experiment) and the updated experiment generating 
+  function.
+- Make sure the file is imported in
+  [`src/autora/synthetic/data/__init__.py`](`src/autora/synthetic/data/__init__.py`).
+- Check that the new experiment can be retrieved using the `retrieve` function.
+- Add code to the template as required. 
 
-## Add new dependencies 
+### Add new dependencies 
 
 In pyproject.toml add the new dependencies under `dependencies`
 
-Install the added dependencies
+Install the added dependencies:
 ```shell
 pip install -e ".[dev]"
 ```
 
-## Publishing the package
+### Publish the package
 
-Update the meta data under `project` in the pyproject.toml file to include name, description, author-name, author-email and version.
-Also, update the URL for the repository under `project.urls`.
+Update the metadata under `project` in the pyproject.toml file to include name, description, author-name, author-email and version
 
-- Follow the guide here: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+- Follow the guide here: [https://packaging.python.org/en/latest/tutorials/packaging-projects/](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
 
 Build the package using:
 ```shell
@@ -61,6 +96,3 @@ Publish the package to PyPI using `twine`:
 ```shell
 twine upload dist/*
 ```
-
-## Workflows
-...
