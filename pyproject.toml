@@ -15,9 +15,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "autora-core[dev]",
-    "autora-synthetic-data[docs]"
-]
-docs = [
     "autora-workflow",
     "scikit-learn",
 ]
