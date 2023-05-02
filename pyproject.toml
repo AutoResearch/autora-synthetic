@@ -4,7 +4,7 @@ description = "AutoRA Synthetic Data"
 authors = []
 dynamic = ["version"]
 
-readme = "README.md"
+readme = "docs/index.md"
 license = { text = "MIT License" }
 
 # ADD NEW DEPENDENCIES HERE

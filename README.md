@@ -14,8 +14,7 @@ Install the synthetic data package:
 pip install -U "autora-synthetic-data"
 ```
 
-!!! success
-    It is recommended to use a `python` environment manager like `virtualenv`.
+> 💡We recommend using a `python` environment manager like `virtualenv`.
 
 Check your installation by running:
 ```shell
