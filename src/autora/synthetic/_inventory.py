@@ -192,14 +192,14 @@ def describe(arg):
 
 @describe.register
 def _(closure: _SyntheticExperimentClosure):
-    print(closure.__doc__)
+    return closure.__doc__
 
 
 @describe.register
 def _(collection: SyntheticExperimentCollection):
-    describe(collection.closure)
+    return describe(collection.closure)
 
 
 @describe.register
 def _(id_: str):
-    describe(retrieve(id_))
+    return describe(retrieve(id_))
