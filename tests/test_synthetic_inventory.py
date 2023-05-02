@@ -57,7 +57,6 @@ def test_bundled_models_can_be_retrieved_by_name(name):
 @given(st.sampled_from(all_bundled_model_names))
 def test_bundled_models_can_be_described_by_name(name):
     description = describe(name)
-    print(description)
     assert isinstance(description, str)
 
 
