@@ -9,4 +9,4 @@ on:
 
 jobs:
   test:
-    uses: AutoResearch/.github/workflows/test-pytest.yml@main
+    uses: AutoResearch/.github/.github/workflows/test-pytest.yml@main
