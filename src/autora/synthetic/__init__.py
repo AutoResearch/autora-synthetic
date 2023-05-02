@@ -51,8 +51,8 @@ Examples:
 
 """
 
-from autora.synthetic import data
-from autora.synthetic.inventory import (
+from . import _data
+from ._inventory import (
     Inventory,
     SyntheticExperimentCollection,
     describe,

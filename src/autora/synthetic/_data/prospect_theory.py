@@ -2,7 +2,8 @@ from functools import partial
 
 import numpy as np
 
-from ..inventory import SyntheticExperimentCollection, register
+from autora.synthetic import SyntheticExperimentCollection, register
+
 from .expected_value import get_variables
 
 
