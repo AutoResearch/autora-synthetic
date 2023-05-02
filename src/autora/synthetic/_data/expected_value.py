@@ -74,7 +74,7 @@ def expected_value_theory(
     minimum_value=-1,
     maximum_value=1,
     added_noise: float = 0.01,
-    rng=np.random.default_rng(),
+    random_state: int = 180,
 ):
     """
     Expected Value Theory
@@ -99,8 +99,10 @@ def expected_value_theory(
         choice_temperature=choice_temperature,
         value_lambda=value_lambda,
         added_noise=added_noise,
-        random_number_generator=rng,
+        random_state=random_state,
     )
+
+    rng = np.random.default_rng(random_state)
 
     variables = get_variables(
         minimum_value=minimum_value, maximum_value=maximum_value, resolution=resolution
