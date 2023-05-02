@@ -51,7 +51,6 @@ Examples:
 
 """
 
-from . import _data
 from ._inventory import (
     Inventory,
     SyntheticExperimentCollection,
@@ -59,3 +58,5 @@ from ._inventory import (
     register,
     retrieve,
 )
+
+from . import _data  # isort: skip  <- _data __must__ be imported last
