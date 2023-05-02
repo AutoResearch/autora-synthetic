@@ -67,19 +67,19 @@ Examples:
     >>> s = retrieve("sinusoid_experiment")
 
     We can retrieve the docstring of the model using the `describe` function
-    >>> describe(s)  # doctest: +ELLIPSIS
+    >>> print(describe(s))  # doctest: +ELLIPSIS
     Shifted sinusoid experiment, combining a sinusoid and a gradient drift.
         Ground truth: y = sin((x - delta) * omega) + (x * m)
         ...
 
     ... or using its id:
-    >>> describe("sinusoid_experiment")  # doctest: +ELLIPSIS
+    >>> print(describe("sinusoid_experiment"))  # doctest: +ELLIPSIS
     Shifted sinusoid experiment, combining a sinusoid and a gradient drift.
         Ground truth: y = sin((x - delta) * omega) + (x * m)
         ...
 
     ... or we can look at the closure function directly:
-    >>> describe(sinusoid_experiment) # doctest: +ELLIPSIS
+    >>> print(describe(sinusoid_experiment)) # doctest: +ELLIPSIS
     Shifted sinusoid experiment, combining a sinusoid and a gradient drift.
         Ground truth: y = sin((x - delta) * omega) + (x * m)
         ...

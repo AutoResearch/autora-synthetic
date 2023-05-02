@@ -11,7 +11,7 @@ Examples:
     >>> s = retrieve("weber_fechner", rng=np.random.default_rng(seed=180))
 
     Use the describe function to give information about the synthetic experiment:
-    >>> describe(s) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    >>> print(describe(s)) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     Weber-Fechner Law...
 
     The synthetic experiement `s` has properties like the name of the experiment:
