@@ -2,8 +2,8 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic import SyntheticExperimentCollection, register
-from autora.synthetic_dataset.expected_value import get_variables
+from ..inventory import SyntheticExperimentCollection, register
+from .expected_value import get_variables
 
 
 def prospect_theory(

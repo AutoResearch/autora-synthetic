@@ -2,8 +2,9 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic import SyntheticExperimentCollection, register
 from autora.variable import DV, IV, ValueType, VariableCollection
+
+from ..inventory import SyntheticExperimentCollection, register
 
 
 def weber_fechner_law(
