@@ -76,6 +76,20 @@ def expected_value_theory(
     added_noise: float = 0.01,
     rng=np.random.default_rng(),
 ):
+    """
+    Expected Value Theory
+
+    Parameters:
+        name:
+        choice_temperature:
+        value_lambda:
+        resolution:
+        minimum_value:
+        maximum_value:
+        added_noise:
+        random_state:
+
+    """
 
     params = dict(
         name=name,
