@@ -14,9 +14,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "autora-synthetic-data[test]",
     "autora-core[dev]",
     "autora-workflow",
     "scikit-learn",
+]
+test = [
+    "pytest",
     "hypothesis"
 ]
 
