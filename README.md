@@ -18,7 +18,7 @@ pip install -U "autora-synthetic-data"
 
 Check your installation by running:
 ```shell
-python -c "from autora.synthetic import retrieve, describe; describe(retrieve('weber_fechner'))"
+python -c "from autora.synthetic import retrieve, describe; print(describe(retrieve('weber_fechner')))"
 ```
 
 ## Developer Guide
