@@ -50,8 +50,6 @@ Examples:
     >>> plt.show()  # doctest: +SKIP
 
 """
-
-from autora.synthetic import data
 from autora.synthetic.inventory import (
     Inventory,
     SyntheticExperimentCollection,
@@ -59,3 +57,4 @@ from autora.synthetic.inventory import (
     register,
     retrieve,
 )
+from autora.synthetic_dataset import *  # noqa: F403

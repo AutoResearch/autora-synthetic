@@ -58,9 +58,8 @@ from functools import partial
 import numpy as np
 from numpy.typing import ArrayLike
 
+from autora.synthetic import SyntheticExperimentCollection, register
 from autora.variable import DV, IV, VariableCollection
-
-from ..inventory import SyntheticExperimentCollection, register
 
 
 def template_experiment(

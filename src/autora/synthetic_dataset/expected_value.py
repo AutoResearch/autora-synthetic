@@ -2,9 +2,8 @@ from functools import partial
 
 import numpy as np
 
+from autora.synthetic import SyntheticExperimentCollection, register
 from autora.variable import DV, IV, ValueType, VariableCollection
-
-from ..inventory import SyntheticExperimentCollection, register
 
 
 def get_variables(minimum_value, maximum_value, resolution):
