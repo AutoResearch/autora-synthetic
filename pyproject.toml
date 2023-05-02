@@ -17,6 +17,7 @@ dev = [
     "autora-core[dev]",
     "autora-workflow",
     "scikit-learn",
+    "hypothesis"
 ]
 
 [project.urls]
