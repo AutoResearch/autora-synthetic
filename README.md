@@ -58,25 +58,25 @@ pre-commit install
 
 ### Add a new dataset
 
-- First, get to know the existing examples and how to use them with the documentation in 
-[`src/autora/synthetic/`](src/autora/synthetic/).
-- Duplicate the 
-  [`template_experiment`](src/autora/synthetic/data/template_experiment.py) or another 
-  existing experiment in [`src/autora/synthetic/data`](src/autora/synthetic/data).
-- Ensure that the `register` function at the bottom of the file is updated with the experiment's 
-  `id` (can't be the same as any other experiment) and the updated experiment generating 
-  function.
-- Ensure that the docstring of the constructing function is updated with a description of the 
-  experiment. 
-- Make sure the file is imported in
-  [`src/autora/synthetic/data/__init__.py`](src/autora/synthetic/data/__init__.py).
-- Check that the new experiment can be retrieved using the `retrieve` function like this:
-  ```shell
-  python -c "from autora.synthetic import retrieve, describe; describe(retrieve('new_experiment_name'))"
-  ```
-- Add code to the template as required.
+New datasets should match existing examples in [`src/autora/synthetic/`](src/autora/synthetic/). 
+> 💡A good starting point might be to duplicate an existing example.
 
-New experiments can be submitted as pull requests.
+Each experiment is described in a single file which includes: 
+- A "factory function" which constructs the experiment and optionally takes parameters to tune
+  aspects of the experiment. This function's docstring serves as the main documentation of the 
+  experiment.
+- A call to `autora.synthetic.register` to register the factory function under a unique name.
+
+The file should be imported in 
+  [`src/autora/synthetic/_data/__init__.py`](src/autora/synthetic/_data/__init__.py).
+
+If these requirements are met, you should be able to display the docstring of the experiment 
+using the `autora.synthetic.retrieve` function like this:
+```shell
+python -c "from autora.synthetic import retrieve, describe; describe(retrieve('new_experiment_name'))"
+```
+
+New experiments fulfilling these requirements can be submitted as pull requests.
 
 ### Publish the package
 
