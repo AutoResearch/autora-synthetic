@@ -11,7 +11,7 @@ You will need:
 Install the synthetic data package:
 
 ```shell
-pip install -U "autora-synthetic-data"
+pip install -U "autora[synthetic-data]" --pre
 ```
 
 !!! success
