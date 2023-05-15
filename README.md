@@ -1,4 +1,4 @@
-# AutoRA Synthetic Experiments
+# Synthetic Experiments
 
 A package with synthetic experiment data for testing AutoRA theorists and experimentalists.
 
