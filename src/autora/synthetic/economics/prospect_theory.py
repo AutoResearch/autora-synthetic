@@ -2,9 +2,8 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic import SyntheticExperimentCollection, register
-
-from .expected_value import get_variables
+from autora.synthetic.economics.expected_value_theory import get_variables
+from autora.synthetic.utilities import SyntheticExperimentCollection
 
 
 def prospect_theory(
@@ -62,10 +61,8 @@ def prospect_theory(
     )
 
     def experiment_runner(X: np.ndarray, added_noise_=added_noise):
-
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-
             # power value function according to:
 
             # A. Tversky, D. Kahneman, Advances in prospect theory: Cumulative representation of
@@ -191,8 +188,6 @@ def prospect_theory(
         experiment_runner=experiment_runner,
         ground_truth=ground_truth,
         plotter=plotter,
+        closure=prospect_theory,
     )
     return collection
-
-
-register("prospect_theory", prospect_theory)

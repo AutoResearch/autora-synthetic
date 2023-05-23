@@ -1,8 +1,9 @@
 from functools import partial
+from typing import Optional
 
 import numpy as np
 
-from autora.synthetic import SyntheticExperimentCollection, register
+from autora.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
 
 
@@ -12,7 +13,7 @@ def weber_fechner_law(
     constant=1.0,
     maximum_stimulus_intensity=5.0,
     added_noise=0.01,
-    rng=np.random.default_rng(),
+    random_state: Optional[int] = None,
 ):
     """
     Weber-Fechner Law
@@ -23,7 +24,7 @@ def weber_fechner_law(
         constant: constant multiplier
         maximum_stimulus_intensity: maximum value for stimulus 1 and 2
         added_noise: standard deviation of normally distributed noise added to y-values
-        rng: `np.random` random number generator to use for generating noise
+        random_state: integer used to seed the random number generator
 
     """
 
@@ -33,7 +34,7 @@ def weber_fechner_law(
         resolution=resolution,
         constant=constant,
         maximum_stimulus_intensity=maximum_stimulus_intensity,
-        rng=rng,
+        random_state=random_state,
     )
 
     iv1 = IV(
@@ -70,6 +71,8 @@ def weber_fechner_law(
         independent_variables=[iv1, iv2],
         dependent_variables=[dv1],
     )
+
+    rng = np.random.default_rng(random_state)
 
     def experiment_runner(
         X: np.ndarray,
@@ -148,11 +151,6 @@ def weber_fechner_law(
         domain=domain,
         plotter=plotter,
         params=params,
+        closure=weber_fechner_law,
     )
     return collection
-
-
-register(
-    "weber-fechner", weber_fechner_law
-)  # todo: make a better interface for multiple aliases
-register("weber_fechner", weber_fechner_law)

@@ -2,7 +2,7 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic import SyntheticExperimentCollection, register
+from autora.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
 
 
@@ -109,7 +109,6 @@ def expected_value_theory(
     )
 
     def experiment_runner(X: np.ndarray, added_noise_=added_noise):
-
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             value_A = value_lambda * x[0]
@@ -191,8 +190,6 @@ def expected_value_theory(
         domain=domain,
         plotter=plotter,
         params=params,
+        closure=expected_value_theory,
     )
     return collection
-
-
-register("expected_value", expected_value_theory)

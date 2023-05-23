@@ -1,20 +1,7 @@
 from hypothesis import assume, given
 from hypothesis import strategies as st
 
-from autora.synthetic import (
-    Inventory,
-    SyntheticExperimentCollection,
-    describe,
-    register,
-    retrieve,
-)
-
-all_bundled_model_names = [
-    "expected_value",
-    "prospect_theory",
-    "template_experiment",
-    "weber_fechner",
-]
+from autora.synthetic.utilities import SyntheticExperimentCollection, register, retrieve
 
 
 @given(st.text())
@@ -46,34 +33,3 @@ def test_model_registration_retrieval_dont_collide_with_two_models(name1, name2)
     # We can still retrieve the first model, and it is equal to the first version
     retrieved3 = retrieve(name1)
     assert retrieved3 is model1
-
-
-@given(st.sampled_from(all_bundled_model_names))
-def test_bundled_models_can_be_retrieved_by_name(name):
-    model = retrieve(name)
-    assert model is not None
-
-
-@given(st.sampled_from(all_bundled_model_names))
-def test_bundled_models_can_be_described_by_name(name):
-    description = describe(name)
-    assert isinstance(description, str)
-
-
-@given(st.sampled_from(all_bundled_model_names))
-def test_bundled_models_can_be_described_by_model(name):
-    model = retrieve(name)
-    description = describe(model)
-    assert isinstance(description, str)
-
-
-@given(st.sampled_from(all_bundled_model_names))
-def test_model_descriptions_from_name_model_closure_are_the_same(name):
-    description_from_name = describe(name)
-    description_from_model = describe(retrieve(name))
-    closure = Inventory[name]
-    description_from_closure = describe(closure)
-
-    assert description_from_name == description_from_model
-    assert description_from_model == description_from_closure
-    assert description_from_closure == description_from_name

@@ -2,11 +2,11 @@
 A template synthetic experiment.
 
 Examples:
-    >>> from autora.synthetic import retrieve
+    >>> from autora.synthetic.abstract.template_experiment import template_experiment
 
-    We can retrieve the experiment using its name:
-    >>> s = retrieve("template_experiment")  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    >>> s
+    We can instantiate the experiment using the imported function
+    >>> s = template_experiment()
+    >>> s  # doctest: +ELLIPSIS
     SyntheticExperimentCollection(name='Template Experiment', params={'name': ...}, ...)
 
     >>> s.name
@@ -58,7 +58,7 @@ from functools import partial
 import numpy as np
 from numpy.typing import ArrayLike
 
-from autora.synthetic import SyntheticExperimentCollection, register
+from autora.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, VariableCollection
 
 
@@ -133,8 +133,6 @@ def template_experiment(
         domain=domain,
         plotter=plotter,
         params=params,
+        closure=template_experiment,
     )
     return collection
-
-
-register("template_experiment", template_experiment)
