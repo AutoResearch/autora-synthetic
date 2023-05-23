@@ -1,4 +1,4 @@
-# AutoRA Synthetic Data
+# Synthetic Data
 
 Synthetic experiment data for testing AutoRA theorists and experimentalists. 
 
