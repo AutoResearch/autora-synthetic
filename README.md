@@ -16,9 +16,9 @@ pip install -U "autora[synthetic-data]" --pre
 
 > 💡We recommend using a `python` environment manager like `virtualenv`.
 
-Check your installation by running:
+Print a description of the prospect theory model by Kahneman and Tversky by running:
 ```shell
-python -c "from autora.synthetic import retrieve, describe; print(describe(retrieve('weber_fechner')))"
+python -c "from autora.synthetic.economics.prospect_theory import prospect_theory; print(prospect_theory().description)"
 ```
 
 ## Developer Guide
