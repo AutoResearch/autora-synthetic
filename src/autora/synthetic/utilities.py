@@ -191,8 +191,8 @@ def describe(arg):
 
 
 @describe.register
-def _(closure: _SyntheticExperimentFactory):
-    return closure.__doc__
+def _(factory_function: _SyntheticExperimentFactory):
+    return factory_function.__doc__
 
 
 @describe.register
