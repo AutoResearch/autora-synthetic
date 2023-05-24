@@ -113,7 +113,7 @@ class _SupportsPredict(Protocol):
         ...
 
 
-@dataclass
+@dataclass(frozen=True)
 class SyntheticExperimentCollection:
     """
     Represents a synthetic experiment.
