@@ -62,10 +62,8 @@ New datasets should match existing examples in [`src/autora/synthetic/`](src/aut
 > 💡A good starting point might be to duplicate an existing example.
 
 Each experiment is described in a single file which includes a "factory function" which:
-- constructs the experiment and 
-- optionally takes parameters to tune aspects of the experiment. 
-- This function's docstring serves as the main documentation of the experiment. 
-  TODO: fix this: add an explicit help string in the collection 
+- constructs the experiment, and 
+- optionally takes parameters to tune aspects of the experiment.  
 
 New experiments fulfilling these requirements can be submitted as pull requests.
 
