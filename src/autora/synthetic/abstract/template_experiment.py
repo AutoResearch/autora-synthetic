@@ -51,6 +51,11 @@ Examples:
     >>> s.plotter()
     >>> plt.show()  # doctest: +SKIP
 
+    Generate a new version of the experiment with different parameters:
+    >>> new_params = dict(s.params, **dict(random_state=190))
+    >>> s.factory_function(**new_params)  # doctest: +ELLIPSIS
+    SyntheticExperimentCollection(..., params={..., 'random_state': 190}, ...)
+
 """
 
 
