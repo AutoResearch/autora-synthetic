@@ -103,17 +103,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import singledispatch
-from typing import Any, Callable, Dict, Optional, Protocol, runtime_checkable
+from typing import Any, Callable, Dict, Optional, Protocol
 
 from autora.variable import VariableCollection
-
-
-@runtime_checkable
-class _SyntheticExperimentFactory(Protocol):
-    """A function which returns a SyntheticExperimentCollection."""
-
-    def __call__(self, *args, **kwargs) -> SyntheticExperimentCollection:
-        ...
 
 
 class _SupportsPredict(Protocol):
@@ -149,6 +141,8 @@ class SyntheticExperimentCollection:
     plotter: Optional[Callable[[Optional[_SupportsPredict]], None]] = None
     factory_function: Optional[_SyntheticExperimentFactory] = None
 
+
+_SyntheticExperimentFactory = Callable[..., SyntheticExperimentCollection]
 
 Inventory: Dict[str, _SyntheticExperimentFactory] = dict()
 """ The dictionary of `SyntheticExperimentCollection`. """
