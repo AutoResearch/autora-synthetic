@@ -2,8 +2,8 @@
 Module for registering and retrieving synthetic models from an inventory.
 
 Examples:
-    To add and recover a new model from the inventory, we need to define it using a function
-    (closure).
+    To add and recover a new model from the inventory, we need to define it using a factory
+    function.
     We start by importing the modules we'll need:
     >>> from functools import partial
     >>> import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ Examples:
     >>> from autora.variable import IV, DV, VariableCollection
 
     Then we can define the function. We define all the arguments we want and add them to a
-    dictionary. The closure – in this case `sinusoid_experiment` – is the scope for all
+    dictionary. The factory_function – in this case `sinusoid_experiment` – is the scope for all
     the parameters we need.
     >>> def sinusoid_experiment(omega=np.pi/3, delta=np.pi/2., m=0.3, resolution=1000,
     ...                         rng=np.random.default_rng()):
@@ -57,6 +57,7 @@ Examples:
     ...         experiment_runner=experiment_runner,
     ...         ground_truth=ground_truth,
     ...         plotter=plotter,
+    ...         factory_function=sinusoid_experiment,
     ...     )
     ...
     ...     return collection
@@ -79,7 +80,7 @@ Examples:
         Ground truth: y = sin((x - delta) * omega) + (x * m)
         ...
 
-    ... or we can look at the closure function directly:
+    ... or we can look at the factory function directly:
     >>> print(describe(sinusoid_experiment)) # doctest: +ELLIPSIS
     Shifted sinusoid experiment, combining a sinusoid and a gradient drift.
         Ground truth: y = sin((x - delta) * omega) + (x * m)
@@ -107,7 +108,7 @@ from autora.variable import VariableCollection
 
 
 @runtime_checkable
-class _SyntheticExperimentClosure(Protocol):
+class _SyntheticExperimentFactory(Protocol):
     """A function which returns a SyntheticExperimentCollection."""
 
     def __call__(self, *args, **kwargs) -> SyntheticExperimentCollection:
@@ -144,23 +145,23 @@ class SyntheticExperimentCollection:
     experiment_runner: Optional[Callable] = None
     ground_truth: Optional[Callable] = None
     plotter: Optional[Callable[[Optional[_SupportsPredict]], None]] = None
-    closure: Optional[Callable] = None
+    factory_function: Optional[_SyntheticExperimentFactory] = None
 
 
-Inventory: Dict[str, _SyntheticExperimentClosure] = dict()
+Inventory: Dict[str, _SyntheticExperimentFactory] = dict()
 """ The dictionary of `SyntheticExperimentCollection`. """
 
 
-def register(id_: str, closure: _SyntheticExperimentClosure) -> None:
+def register(id_: str, factory_function: _SyntheticExperimentFactory) -> None:
     """
     Add a new synthetic experiment to the Inventory.
 
     Parameters:
          id_: the unique id for the model.
-         closure: a function which returns a SyntheticExperimentCollection
+         factory_function: a function which returns a SyntheticExperimentCollection
 
     """
-    Inventory[id_] = closure
+    Inventory[id_] = factory_function
 
 
 def retrieve(id_: str, **kwargs) -> SyntheticExperimentCollection:
@@ -173,10 +174,8 @@ def retrieve(id_: str, **kwargs) -> SyntheticExperimentCollection:
     Returns:
         the synthetic experiment
     """
-    closure: _SyntheticExperimentClosure = Inventory[id_]
-    evaluated_closure = closure(**kwargs)
-    evaluated_closure.closure = closure
-    return evaluated_closure
+    result = Inventory[id_](**kwargs)
+    return result
 
 
 @singledispatch
@@ -185,20 +184,20 @@ def describe(arg):
     Print the docstring for a synthetic experiment.
 
     Args:
-        arg: the experiment's ID, an object returned from the `retrieve` function, or a closure
-            which creates a new experiment.
+        arg: the experiment's ID, an object returned from the `retrieve` function,
+            or a factory_function which creates a new experiment.
     """
     raise NotImplementedError(f"{arg=} not yet supported")
 
 
 @describe.register
-def _(closure: _SyntheticExperimentClosure):
+def _(closure: _SyntheticExperimentFactory):
     return closure.__doc__
 
 
 @describe.register
 def _(collection: SyntheticExperimentCollection):
-    return describe(collection.closure)
+    return describe(collection.factory_function)
 
 
 @describe.register

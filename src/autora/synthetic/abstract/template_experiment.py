@@ -133,6 +133,6 @@ def template_experiment(
         domain=domain,
         plotter=plotter,
         params=params,
-        closure=template_experiment,
+        factory_function=template_experiment,
     )
     return collection

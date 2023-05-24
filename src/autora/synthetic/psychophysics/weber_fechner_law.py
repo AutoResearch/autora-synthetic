@@ -151,6 +151,6 @@ def weber_fechner_law(
         domain=domain,
         plotter=plotter,
         params=params,
-        closure=weber_fechner_law,
+        factory_function=weber_fechner_law,
     )
     return collection

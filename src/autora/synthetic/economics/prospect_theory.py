@@ -188,6 +188,6 @@ def prospect_theory(
         experiment_runner=experiment_runner,
         ground_truth=ground_truth,
         plotter=plotter,
-        closure=prospect_theory,
+        factory_function=prospect_theory,
     )
     return collection

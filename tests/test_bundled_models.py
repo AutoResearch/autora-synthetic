@@ -43,7 +43,7 @@ def test_bundled_models_can_be_described_by_model(name):
 def test_model_descriptions_from_name_model_closure_are_the_same(name):
     description_from_name = describe(name)
     description_from_model = describe(retrieve(name))
-    description_from_closure = describe(retrieve(name).closure)
+    description_from_closure = describe(retrieve(name).factory_function)
 
     assert description_from_name == description_from_model
     assert description_from_model == description_from_closure

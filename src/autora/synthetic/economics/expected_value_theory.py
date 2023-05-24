@@ -190,6 +190,6 @@ def expected_value_theory(
         domain=domain,
         plotter=plotter,
         params=params,
-        closure=expected_value_theory,
+        factory_function=expected_value_theory,
     )
     return collection
