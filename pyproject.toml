@@ -4,7 +4,7 @@ description = "AutoRA Synthetic Data"
 authors = []
 dynamic = ["version"]
 
-readme = "docs/index.md"
+readme = "README.md"
 license = { text = "MIT License" }
 
 # ADD NEW DEPENDENCIES HERE
@@ -26,8 +26,8 @@ test = [
 
 [project.urls]
 homepage = "http://www.empiricalresearch.ai"
-repository = "https://github.com/AutoResearch/autora-theorist-template"
-documentation = "https://autoresearch.github.io/autora/"
+repository = "https://github.com/AutoResearch/autora-synthetic-data"
+documentation = "https://autoresearch.github.io/autora-synthetic-data/"
 
 [build-system]
 requires = ["setuptools", "setuptools_scm"]
