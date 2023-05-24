@@ -101,6 +101,7 @@ Examples:
 
 from __future__ import annotations
 
+from collections import abc
 from dataclasses import dataclass
 from functools import singledispatch
 from typing import Any, Callable, Dict, Optional, Protocol
@@ -187,8 +188,8 @@ def describe(arg):
 
 
 @describe.register
-def _(factory_function: _SyntheticExperimentFactory):
-    return factory_function.__doc__
+def _(func: abc.Callable):
+    return func.__doc__
 
 
 @describe.register
