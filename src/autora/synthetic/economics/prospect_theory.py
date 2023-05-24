@@ -182,6 +182,7 @@ def prospect_theory(
 
     collection = SyntheticExperimentCollection(
         name=name,
+        description=prospect_theory.__doc__,
         params=params,
         variables=variables,
         domain=domain,

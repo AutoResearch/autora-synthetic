@@ -184,6 +184,7 @@ def expected_value_theory(
 
     collection = SyntheticExperimentCollection(
         name=name,
+        description=expected_value_theory.__doc__,
         variables=variables,
         experiment_runner=experiment_runner,
         ground_truth=ground_truth,

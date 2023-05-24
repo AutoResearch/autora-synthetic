@@ -6,8 +6,9 @@ Examples:
 
     We can instantiate the experiment using the imported function
     >>> s = template_experiment()
-    >>> s  # doctest: +ELLIPSIS
-    SyntheticExperimentCollection(name='Template Experiment', params={'name': ...}, ...)
+    >>> s  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    SyntheticExperimentCollection(name='Template Experiment', description='...',
+        params={'name': ...}, ...)
 
     >>> s.name
     'Template Experiment'
@@ -127,6 +128,7 @@ def template_experiment(
     # The object which gets stored in the synthetic inventory
     collection = SyntheticExperimentCollection(
         name=name,
+        description=template_experiment.__doc__,
         variables=variables,
         experiment_runner=experiment_runner,
         ground_truth=ground_truth,

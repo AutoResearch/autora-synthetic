@@ -51,6 +51,7 @@ Examples:
     ...
     ...     collection = SyntheticExperimentCollection(
     ...         name=name,
+    ...         description=sinusoid_experiment.__doc__,
     ...         params=params,
     ...         variables=variables,
     ...         domain=domain,
@@ -139,6 +140,7 @@ class SyntheticExperimentCollection:
     """
 
     name: Optional[str] = None
+    description: Optional[str] = None
     params: Optional[Dict] = None
     variables: Optional[VariableCollection] = None
     domain: Optional[Callable] = None
@@ -197,7 +199,7 @@ def _(factory_function: _SyntheticExperimentFactory):
 
 @describe.register
 def _(collection: SyntheticExperimentCollection):
-    return describe(collection.factory_function)
+    return collection.description
 
 
 @describe.register

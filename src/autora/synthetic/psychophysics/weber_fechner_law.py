@@ -145,6 +145,7 @@ def weber_fechner_law(
 
     collection = SyntheticExperimentCollection(
         name=name,
+        description=weber_fechner_law.__doc__,
         variables=variables,
         experiment_runner=experiment_runner,
         ground_truth=ground_truth,
