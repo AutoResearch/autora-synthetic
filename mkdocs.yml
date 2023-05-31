@@ -6,4 +6,4 @@ repo_url: 'https://github.com/autoresearch/autora-synthetic-data'
 
 nav:
 - Introduction: 'index.md'
-- Example: 'example.ipynb'
+- Example: 'Example.ipynb'
