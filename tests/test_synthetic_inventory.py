@@ -1,7 +1,11 @@
 from hypothesis import assume, given
 from hypothesis import strategies as st
 
-from autora.synthetic.utilities import SyntheticExperimentCollection, register, retrieve
+from autora.experiment_runner.synthetic.utilities import (
+    SyntheticExperimentCollection,
+    register,
+    retrieve,
+)
 
 
 @given(st.text())

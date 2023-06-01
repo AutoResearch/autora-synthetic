@@ -18,6 +18,6 @@ pip install -U "autora[synthetic-data]" --pre
 
 Print a description of the prospect theory model by Kahneman and Tversky by running:
 ```shell
-python -c "from autora.synthetic.economics.prospect_theory import prospect_theory; print(prospect_theory().description)"
+python -c "from autora.experiment_runner.synthetic.economics.prospect_theory import prospect_theory; print(prospect_theory().description)"
 ```
 

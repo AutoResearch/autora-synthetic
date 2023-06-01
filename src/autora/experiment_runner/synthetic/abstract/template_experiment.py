@@ -2,7 +2,9 @@
 A template synthetic experiment.
 
 Examples:
-    >>> from autora.synthetic.abstract.template_experiment import template_experiment
+    >>> from autora.experiment_runner.synthetic.abstract.template_experiment import (
+    ...     template_experiment
+    ... )
 
     We can instantiate the experiment using the imported function
     >>> s = template_experiment()
@@ -64,7 +66,7 @@ from functools import partial
 import numpy as np
 from numpy.typing import ArrayLike
 
-from autora.synthetic.utilities import SyntheticExperimentCollection
+from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, VariableCollection
 
 

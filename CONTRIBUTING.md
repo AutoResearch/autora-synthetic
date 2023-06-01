@@ -35,7 +35,8 @@ pre-commit install
 
 ## Add a new dataset
 
-New datasets should match existing examples in [`src/autora/synthetic/`](src/autora/synthetic/). 
+New datasets should match existing examples in 
+[`src/autora/experiment_runner/synthetic/`](src/autora/experiment_runner/synthetic/). 
 > 💡A good starting point might be to duplicate an existing example.
 
 Each experiment is described in a single file which includes a "factory function" which:

@@ -8,7 +8,7 @@ Examples:
     >>> from functools import partial
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
-    >>> from autora.synthetic.utilities import (register, retrieve, describe,
+    >>> from autora.experiment_runner.synthetic.utilities import (register, retrieve, describe,
     ...     SyntheticExperimentCollection)
     >>> from autora.variable import IV, DV, VariableCollection
 

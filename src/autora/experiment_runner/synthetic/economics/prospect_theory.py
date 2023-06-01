@@ -2,8 +2,10 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic.economics.expected_value_theory import get_variables
-from autora.synthetic.utilities import SyntheticExperimentCollection
+from autora.experiment_runner.synthetic.economics.expected_value_theory import (
+    get_variables,
+)
+from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 
 
 def prospect_theory(

@@ -1,11 +1,17 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from autora.synthetic.abstract.template_experiment import template_experiment
-from autora.synthetic.economics.expected_value_theory import expected_value_theory
-from autora.synthetic.economics.prospect_theory import prospect_theory
-from autora.synthetic.psychophysics.weber_fechner_law import weber_fechner_law
-from autora.synthetic.utilities import describe, register, retrieve
+from autora.experiment_runner.synthetic.abstract.template_experiment import (
+    template_experiment,
+)
+from autora.experiment_runner.synthetic.economics.expected_value_theory import (
+    expected_value_theory,
+)
+from autora.experiment_runner.synthetic.economics.prospect_theory import prospect_theory
+from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
+    weber_fechner_law,
+)
+from autora.experiment_runner.synthetic.utilities import describe, register, retrieve
 
 all_bundled_models = [
     ("expected_value_theory", expected_value_theory),

@@ -2,7 +2,7 @@ from functools import partial
 
 import numpy as np
 
-from autora.synthetic.utilities import SyntheticExperimentCollection
+from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
 
 
