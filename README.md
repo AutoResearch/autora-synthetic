@@ -8,10 +8,10 @@ You will need:
 
 - `python` 3.8 or greater: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 
-Install the synthetic data package:
+Install the synthetic data package (as part of `autora`):
 
 ```shell
-pip install -U "autora[synthetic-data]" --pre
+pip install -U "autora" --pre
 ```
 
 > 💡We recommend using a `python` environment manager like `virtualenv`.

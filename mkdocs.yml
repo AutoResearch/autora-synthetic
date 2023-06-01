@@ -2,7 +2,7 @@
 INHERIT: mkdocs/base.yml  # use the shared AutoRA configuration by default
 
 site_name: AutoRA Synthetic Data
-repo_url: 'https://github.com/AutoResearch/autora-synthetic-data'
+repo_url: 'https://github.com/AutoResearch/autora-synthetic'
 
 nav:
 - Introduction: 'index.md'
