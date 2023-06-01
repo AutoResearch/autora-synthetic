@@ -11,7 +11,7 @@ You will need:
 Install the synthetic data package (as part of `autora`):
 
 ```shell
-pip install -U "autora" --pre
+pip install -U "autora"
 ```
 
 > 💡We recommend using a `python` environment manager like `virtualenv`.
