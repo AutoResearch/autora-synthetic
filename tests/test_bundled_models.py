@@ -8,7 +8,9 @@ from autora.experiment_runner.synthetic.economics.expected_value_theory import (
     expected_value_theory,
 )
 from autora.experiment_runner.synthetic.economics.prospect_theory import prospect_theory
-from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import luce_choice_ratio
+from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
+    luce_choice_ratio,
+)
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )

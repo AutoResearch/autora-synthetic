@@ -7,12 +7,12 @@ from autora.variable import DV, IV, ValueType, VariableCollection
 
 
 def luce_choice_ratio(
-        name='Luce-Choice-Ratio',
-        added_noise=0.01,
-        resolution=8,
-        maximum_similarity=10,
-        focus=0.8,
-        rng=np.random.default_rng()
+    name="Luce-Choice-Ratio",
+    added_noise=0.01,
+    resolution=8,
+    maximum_similarity=10,
+    focus=0.8,
+    rng=np.random.default_rng(),
 ):
     """
     Luce-Choice-Ratio
@@ -27,11 +27,35 @@ def luce_choice_ratio(
 
     Shepard-Luce Choice Rule according to:
         - Equation (4) in Logan, G. D., & Gordon, R. D. (2001).
-        - and in Executive control of visual attention in dual-task situations. Psychological review, 108(2), 393.
+        - and in Executive control of visual attention in dual-task situations.
+            Psychological review, 108(2), 393.
         - Equation (5) in Luce, R. D. (1963). Detection and recognition.
 
+    Examples:
+        First we seed numpy to get replicable results:
+        >>> np.random.seed(42)
+
+        We can instantiate a Shepard-Cue Choice Experiment. We use a seed to get replicable results:
+        >>> l_s_experiment = luce_choice_ratio(rng=42)
+
+        We can look at the name of the experiment:
+        >>> l_s_experiment.name
+        'Luce-Choice-Ratio'
+
+        To call the ground truth, we can use an attribute of the experiment:
+        >>> l_s_experiment.ground_truth(np.array([[1,2,3,4]]))
+        array([[0.21052632]])
+
+        We can also run an experiment:
+        >>> l_s_experiment.experiment_runner(np.array([[1,2,3,4]]))
+        array([[0.21016246]])
+
+        To plot the experiment use:
+        >>> l_s_experiment.plotter()
+        >>> plt.show()  # doctest: +SKIP
+
     """
-    minimum_similarity = 1/maximum_similarity
+    minimum_similarity = 1 / maximum_similarity
 
     params = dict(
         name=name,
@@ -40,7 +64,7 @@ def luce_choice_ratio(
         minimum_similarity=minimum_similarity,
         resolution=resolution,
         focus=focus,
-        rng=rng
+        rng=rng,
     )
 
     similarity_category_A1 = IV(
@@ -49,7 +73,7 @@ def luce_choice_ratio(
         value_range=(minimum_similarity, maximum_similarity),
         units="similarity",
         variable_label="Similarity with Category A1",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     similarity_category_A2 = IV(
@@ -58,7 +82,7 @@ def luce_choice_ratio(
         value_range=(minimum_similarity, maximum_similarity),
         units="similarity",
         variable_label="Similarity with Category A2",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     similarity_category_B1 = IV(
@@ -67,7 +91,7 @@ def luce_choice_ratio(
         value_range=(minimum_similarity, maximum_similarity),
         units="similarity",
         variable_label="Similarity with Category B1",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     similarity_category_B2 = IV(
@@ -76,7 +100,7 @@ def luce_choice_ratio(
         value_range=(minimum_similarity, maximum_similarity),
         units="similarity",
         variable_label="Similarity with Category B2",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     choose_A1 = DV(
@@ -84,15 +108,16 @@ def luce_choice_ratio(
         value_range=(0, 1),
         units="probability",
         variable_label="Probability of Choosing A1",
-        type=ValueType.PROBABILITY
+        type=ValueType.PROBABILITY,
     )
 
     variables = VariableCollection(
-        independent_variables=[similarity_category_A1,
-                               similarity_category_A2,
-                               similarity_category_B1,
-                               similarity_category_B2,
-                               ],
+        independent_variables=[
+            similarity_category_A1,
+            similarity_category_A2,
+            similarity_category_B1,
+            similarity_category_B2,
+        ],
         dependent_variables=[choose_A1],
     )
 
@@ -103,17 +128,17 @@ def luce_choice_ratio(
     ):
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-
             similarity_A1 = x[0]
             similarity_A2 = x[1]
             similarity_B1 = x[2]
             similarity_B2 = x[3]
 
-            y = (similarity_A1 * focus + np.random.normal(0, added_noise_)) / \
-                (similarity_A1 * focus +
-                 similarity_A2 * focus +
-                 similarity_B1 * (1 - focus_) +
-                 similarity_B2 * (1 - focus_))
+            y = (similarity_A1 * focus + np.random.normal(0, added_noise_)) / (
+                similarity_A1 * focus
+                + similarity_A2 * focus
+                + similarity_B1 * (1 - focus_)
+                + similarity_B2 * (1 - focus_)
+            )
             # probability can't be negative or larger than 1 (the noise can make it so)
             if y <= 0:
                 y = 0.0001
@@ -131,25 +156,31 @@ def luce_choice_ratio(
         similarity_B1 = variables.independent_variables[2].allowed_values
         similarity_B2 = variables.independent_variables[3].allowed_values
 
-        X = np.array(np.meshgrid(similarity_A1,
-                                 similarity_A2,
-                                 similarity_B1,
-                                 similarity_B2,
-                                 )).T.reshape(-1, 4)
+        X = np.array(
+            np.meshgrid(
+                similarity_A1,
+                similarity_A2,
+                similarity_B1,
+                similarity_B2,
+            )
+        ).T.reshape(-1, 4)
 
-        # remove all conditions from X where the focus is 0 and the similarity of A1 is 0 or the similarity of A2 is 0
+        # remove all conditions from X where the focus is 0 and the similarity of A1 is 0
+        # or the similarity of A2 is 0
         X = X[~((X[:, 0] == 0) & (X[:, 1] == 0) & (X[:, 2] == 0) & (X[:, 3] == 0))]
         return X
 
     def plotter(
         model=None,
     ):
-        import matplotlib.pyplot as plt
         import matplotlib.colors as mcolors
+        import matplotlib.pyplot as plt
 
-        similarity_A1 = np.linspace(variables.independent_variables[0].value_range[0],
-                                    variables.independent_variables[0].value_range[1],
-                                    100)
+        similarity_A1 = np.linspace(
+            variables.independent_variables[0].value_range[0],
+            variables.independent_variables[0].value_range[1],
+            100,
+        )
 
         similarity_A2 = 0.5  # 1 - similarity_A1
 
@@ -168,14 +199,22 @@ def luce_choice_ratio(
             X[:, 3] = similarity_B2
 
             y = ground_truth(X)
-            plt.plot(similarity_A1.reshape((len(similarity_A1), 1)), y,
-                     label=f"Similarity to B1 = {similarity_B1} (Original)",
-                     c=colors[col_keys[idx]])
+            plt.plot(
+                similarity_A1.reshape((len(similarity_A1), 1)),
+                y,
+                label=f"Similarity to B1 = {similarity_B1} (Original)",
+                c=colors[col_keys[idx]],
+            )
 
             if model is not None:
                 y = model.predict(X)
-                plt.plot(similarity_A1, y, label=f"Similarity to B1 = {similarity_B1} (Recovered)",
-                         c=colors[col_keys[idx]], linestyle="--")
+                plt.plot(
+                    similarity_A1,
+                    y,
+                    label=f"Similarity to B1 = {similarity_B1} (Recovered)",
+                    c=colors[col_keys[idx]],
+                    linestyle="--",
+                )
 
         x_limit = [np.min(similarity_A1), np.max(similarity_A1)]
         y_limit = [0, 1]
