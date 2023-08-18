@@ -7,7 +7,7 @@ Examples:
     ... )
 
     We can instantiate the experiment using the imported function
-    >>> s = template_experiment()
+    >>> s = template_experiment(random_state=42)
     >>> s  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     SyntheticExperimentCollection(name='Template Experiment', description='...',
         params={'name': ...}, ...)
@@ -15,7 +15,7 @@ Examples:
     >>> s.name
     'Template Experiment'
 
-    >>> s.variables
+    >>> s.variables # doctest: +ELLIPSIS
     VariableCollection(...)
 
     >>> s.domain()
@@ -105,7 +105,7 @@ def template_experiment(
 
     def experiment_runner(conditions: ArrayLike, added_noise_=added_noise):
         """A function which simulates noisy observations."""
-        x_ = np.array(x)
+        x_ = np.array(conditions)
         y = x_ + 1.0 + rng.normal(0, added_noise_, size=x_.shape)
         return y
 
