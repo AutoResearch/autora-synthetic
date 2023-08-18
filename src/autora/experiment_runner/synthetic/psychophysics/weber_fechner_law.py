@@ -13,7 +13,6 @@ def weber_fechner_law(
     resolution=100,
     constant=1.0,
     maximum_stimulus_intensity=5.0,
-    added_noise=0.01,
     random_state: Optional[int] = None,
 ):
     """
@@ -43,7 +42,6 @@ def weber_fechner_law(
     """
 
     params = dict(
-        added_noise=added_noise,
         name=name,
         resolution=resolution,
         constant=constant,
@@ -90,13 +88,13 @@ def weber_fechner_law(
 
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        std: float = 0.01,
+        added_noise=0.01,
     ):
         X = np.array(conditions)
 
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            y = constant * np.log(x[1] / x[0]) + rng.normal(0, std)
+            y = constant * np.log(x[1] / x[0]) + rng.normal(0, added_noise)
             Y[idx] = y
 
         experiment_data = pd.DataFrame(conditions)
@@ -104,7 +102,7 @@ def weber_fechner_law(
         experiment_data[dv1.name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, std=0.0)
+    ground_truth = partial(experiment_runner, added_noise=0.0)
 
     def domain():
         s1_values = variables.independent_variables[0].allowed_values

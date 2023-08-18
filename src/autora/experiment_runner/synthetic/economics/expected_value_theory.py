@@ -75,7 +75,6 @@ def expected_value_theory(
     resolution=10,
     minimum_value=-1,
     maximum_value=1,
-    added_noise: float = 0.01,
     random_state: Optional[int] = None,
 ):
     """
@@ -100,7 +99,6 @@ def expected_value_theory(
         resolution=resolution,
         choice_temperature=choice_temperature,
         value_lambda=value_lambda,
-        added_noise=added_noise,
         random_state=random_state,
     )
 
@@ -111,7 +109,7 @@ def expected_value_theory(
 
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        added_noise_=added_noise,
+        added_noise: float = 0.01,
     ):
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
@@ -122,8 +120,8 @@ def expected_value_theory(
             probability_a = x[1]
             probability_b = x[3]
 
-            expected_value_A = value_A * probability_a + rng.normal(0, added_noise_)
-            expected_value_B = value_B * probability_b + rng.normal(0, added_noise_)
+            expected_value_A = value_A * probability_a + rng.normal(0, added_noise)
+            expected_value_B = value_B * probability_b + rng.normal(0, added_noise)
 
             # compute probability of choosing option A
             p_choose_A = np.exp(expected_value_A / choice_temperature) / (
@@ -138,7 +136,7 @@ def expected_value_theory(
         experiment_data[variables.dependent_variables[0].name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(experiment_runner, added_noise=0.0)
 
     def domain():
         X = np.array(

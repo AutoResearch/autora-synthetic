@@ -26,7 +26,7 @@ Examples:
 
     >>> s.ground_truth  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     functools.partial(<function template_experiment.<locals>.experiment_runner at 0x...>,
-                      added_noise_=0.0)
+                      added_noise=0.0)
 
     >>> s.ground_truth(1.)
     2.0
@@ -74,7 +74,6 @@ from autora.variable import DV, IV, VariableCollection
 def template_experiment(
     # Add any configurable parameters with their defaults here:
     name: str = "Template Experiment",
-    added_noise: float = 0.1,
     random_state: Optional[int] = None,
 ):
     """
@@ -88,7 +87,6 @@ def template_experiment(
     params = dict(
         # Include all parameters here:
         name=name,
-        added_noise=added_noise,
         random_state=random_state,
     )
 
@@ -103,13 +101,13 @@ def template_experiment(
     # Define experiment runner
     rng = np.random.default_rng(random_state)
 
-    def experiment_runner(conditions: ArrayLike, added_noise_=added_noise):
+    def experiment_runner(conditions: ArrayLike, added_noise: float = 0.1):
         """A function which simulates noisy observations."""
         x_ = np.array(conditions)
-        y = x_ + 1.0 + rng.normal(0, added_noise_, size=x_.shape)
+        y = x_ + 1.0 + rng.normal(0, added_noise, size=x_.shape)
         return y
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(experiment_runner, added_noise=0.0)
     """A function which simulates perfect observations"""
 
     def domain():

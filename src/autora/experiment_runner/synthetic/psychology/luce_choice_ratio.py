@@ -10,7 +10,6 @@ from autora.variable import DV, IV, ValueType, VariableCollection
 
 def luce_choice_ratio(
     name="Luce-Choice-Ratio",
-    added_noise=0.01,
     resolution=8,
     maximum_similarity=10,
     focus=0.8,
@@ -65,7 +64,6 @@ def luce_choice_ratio(
 
     params = dict(
         name=name,
-        added_noise=added_noise,
         maximum_similarity=maximum_similarity,
         minimum_similarity=minimum_similarity,
         resolution=resolution,
@@ -132,7 +130,7 @@ def luce_choice_ratio(
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         focus_: float = focus,
-        added_noise_: float = added_noise,
+        added_noise=0.01,
     ):
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
@@ -142,7 +140,7 @@ def luce_choice_ratio(
             similarity_B1 = x[2]
             similarity_B2 = x[3]
 
-            y = (similarity_A1 * focus + rng.normal(0, added_noise_)) / (
+            y = (similarity_A1 * focus + rng.normal(0, added_noise)) / (
                 similarity_A1 * focus
                 + similarity_A2 * focus
                 + similarity_B1 * (1 - focus_)
@@ -159,7 +157,7 @@ def luce_choice_ratio(
         experiment_data[choose_A1.name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(experiment_runner, added_noise=0.0)
 
     def domain():
         similarity_A1 = variables.independent_variables[0].allowed_values

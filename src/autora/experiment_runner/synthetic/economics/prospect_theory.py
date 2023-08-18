@@ -12,7 +12,6 @@ from autora.experiment_runner.synthetic.utilities import SyntheticExperimentColl
 
 def prospect_theory(
     name="Prospect Theory",
-    added_noise=0.01,
     choice_temperature=0.1,
     value_alpha=0.88,
     value_beta=0.88,
@@ -46,7 +45,6 @@ def prospect_theory(
     """
 
     params = dict(
-        added_noise=added_noise,
         choice_temperature=choice_temperature,
         value_alpha=value_alpha,
         value_beta=value_beta,
@@ -67,7 +65,7 @@ def prospect_theory(
 
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        added_noise_=added_noise,
+        added_noise=0.01,
     ):
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
@@ -120,8 +118,8 @@ def prospect_theory(
                 x[3] ** coefficient + (1 - x[3]) ** coefficient
             ) ** (1 / coefficient)
 
-            expected_value_A = value_A * probability_a + rng.normal(0, added_noise_)
-            expected_value_B = value_B * probability_b + rng.normal(0, added_noise_)
+            expected_value_A = value_A * probability_a + rng.normal(0, added_noise)
+            expected_value_B = value_B * probability_b + rng.normal(0, added_noise)
 
             # compute probability of choosing option A
             p_choose_A = np.exp(expected_value_A / choice_temperature) / (
@@ -136,7 +134,7 @@ def prospect_theory(
         experiment_data[variables.dependent_variables[0].name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(experiment_runner, added_noise=0.0)
 
     def domain():
         v_a = variables.independent_variables[0].allowed_values
