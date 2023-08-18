@@ -11,6 +11,9 @@ from autora.experiment_runner.synthetic.economics.prospect_theory import prospec
 from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
     luce_choice_ratio,
 )
+from autora.experiment_runner.synthetic.psychology.stroop_model import (
+    stroop_model,
+)
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )
@@ -22,6 +25,7 @@ all_bundled_models = [
     ("luce_choice_ratio", luce_choice_ratio),
     ("template_experiment", template_experiment),
     ("weber_fechner_law", weber_fechner_law),
+    ("stroop_model", stroop_model),
 ]
 
 all_bundled_model_names = [b[0] for b in all_bundled_models]
