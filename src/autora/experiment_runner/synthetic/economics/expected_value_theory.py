@@ -87,7 +87,6 @@ def expected_value_theory(
         resolution:
         minimum_value:
         maximum_value:
-        added_noise:
         random_state:
 
     """
