@@ -1,7 +1,8 @@
 from functools import partial
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
@@ -25,6 +26,19 @@ def weber_fechner_law(
         maximum_stimulus_intensity: maximum value for stimulus 1 and 2
         added_noise: standard deviation of normally distributed noise added to y-values
         random_state: integer used to seed the random number generator
+
+    Examples:
+        >>> experiment = weber_fechner_law(random_state=42)
+
+        # We can run the runner with numpy arrays or DataFrames. Ther return value will
+        # always be a pandas DataFrame.
+        >>> experiment.experiment_runner(np.array([[.1,.2]]))
+            S1   S2  difference_detected
+        0  0.1  0.2             0.696194
+
+        >>> experiment.experiment_runner(pd.DataFrame({'S1': [0.1], 'S2': [0.2]}))
+            S1   S2  difference_detected
+        0  0.1  0.2             0.682747
 
     """
 
@@ -75,18 +89,20 @@ def weber_fechner_law(
     rng = np.random.default_rng(random_state)
 
     def experiment_runner(
-        X: np.ndarray,
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         std: float = 0.01,
     ):
+        X = np.array(conditions)
+
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            # jnd =  np.min(x) * weber_constant
-            # response = (x[1]-x[0]) - jnd
-            # y = 1/(1+np.exp(-response)) + np.random.normal(0, std)
             y = constant * np.log(x[1] / x[0]) + rng.normal(0, std)
             Y[idx] = y
 
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[dv1.name] = Y
+        return experiment_data
 
     ground_truth = partial(experiment_runner, std=0.0)
 

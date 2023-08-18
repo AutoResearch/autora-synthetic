@@ -62,6 +62,7 @@ Examples:
 
 
 from functools import partial
+from typing import Optional
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -74,7 +75,7 @@ def template_experiment(
     # Add any configurable parameters with their defaults here:
     name: str = "Template Experiment",
     added_noise: float = 0.1,
-    random_state: int = 42,
+    random_state: Optional[int] = None,
 ):
     """
     A template for synthetic experiments.
@@ -102,7 +103,7 @@ def template_experiment(
     # Define experiment runner
     rng = np.random.default_rng(random_state)
 
-    def experiment_runner(x: ArrayLike, added_noise_=added_noise):
+    def experiment_runner(conditions: ArrayLike, added_noise_=added_noise):
         """A function which simulates noisy observations."""
         x_ = np.array(x)
         y = x_ + 1.0 + rng.normal(0, added_noise_, size=x_.shape)

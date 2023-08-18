@@ -1,6 +1,8 @@
 from functools import partial
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.economics.expected_value_theory import (
     get_variables,
@@ -20,7 +22,7 @@ def prospect_theory(
     resolution=10,
     minimum_value=-1,
     maximum_value=1,
-    rng=np.random.default_rng(),
+    random_state: Optional[int] = None,
 ):
     """
     Parameters from
@@ -54,15 +56,20 @@ def prospect_theory(
         resolution=resolution,
         minimum_value=minimum_value,
         maximum_value=maximum_value,
-        rng=rng,
+        random_state=random_state,
         name=name,
     )
 
     variables = get_variables(
         minimum_value=minimum_value, maximum_value=maximum_value, resolution=resolution
     )
+    rng = np.random.default_rng(random_state)
 
-    def experiment_runner(X: np.ndarray, added_noise_=added_noise):
+    def experiment_runner(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
+        added_noise_=added_noise,
+    ):
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             # power value function according to:
@@ -124,7 +131,10 @@ def prospect_theory(
 
             Y[idx] = p_choose_A
 
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
     ground_truth = partial(experiment_runner, added_noise_=0.0)
 

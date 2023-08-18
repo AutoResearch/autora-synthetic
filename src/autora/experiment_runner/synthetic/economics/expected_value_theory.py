@@ -1,6 +1,8 @@
 from functools import partial
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
@@ -74,7 +76,7 @@ def expected_value_theory(
     minimum_value=-1,
     maximum_value=1,
     added_noise: float = 0.01,
-    random_state: int = 180,
+    random_state: Optional[int] = None,
 ):
     """
     Expected Value Theory
@@ -102,13 +104,16 @@ def expected_value_theory(
         random_state=random_state,
     )
 
-    rng = np.random.default_rng(random_state)
-
     variables = get_variables(
         minimum_value=minimum_value, maximum_value=maximum_value, resolution=resolution
     )
+    rng = np.random.default_rng(random_state)
 
-    def experiment_runner(X: np.ndarray, added_noise_=added_noise):
+    def experiment_runner(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
+        added_noise_=added_noise,
+    ):
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             value_A = value_lambda * x[0]
@@ -128,7 +133,10 @@ def expected_value_theory(
 
             Y[idx] = p_choose_A
 
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
     ground_truth = partial(experiment_runner, added_noise_=0.0)
 
