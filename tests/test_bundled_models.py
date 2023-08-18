@@ -12,8 +12,13 @@ from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
     luce_choice_ratio,
 )
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
-    weber_fechner_law, stevens_power_law
+    weber_fechner_law,
 )
+
+from autora.experiment_runner.synthetic.psychophysics.stevens_power_law import (
+    stevens_power_law,
+)
+
 from autora.experiment_runner.synthetic.utilities import describe, register, retrieve
 
 all_bundled_models = [
