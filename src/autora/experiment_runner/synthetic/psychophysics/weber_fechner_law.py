@@ -88,13 +88,13 @@ def weber_fechner_law(
 
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        added_noise=0.01,
+        observation_noise=0.01,
     ):
         X = np.array(conditions)
 
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            y = constant * np.log(x[1] / x[0]) + rng.normal(0, added_noise)
+            y = constant * np.log(x[1] / x[0]) + rng.normal(0, observation_noise)
             Y[idx] = y
 
         experiment_data = pd.DataFrame(conditions)

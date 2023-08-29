@@ -65,7 +65,7 @@ def prospect_theory(
 
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        added_noise=0.01,
+        observation_noise=0.01,
     ):
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
@@ -118,8 +118,8 @@ def prospect_theory(
                 x[3] ** coefficient + (1 - x[3]) ** coefficient
             ) ** (1 / coefficient)
 
-            expected_value_A = value_A * probability_a + rng.normal(0, added_noise)
-            expected_value_B = value_B * probability_b + rng.normal(0, added_noise)
+            expected_value_A = value_A * probability_a + rng.normal(0, observation_noise)
+            expected_value_B = value_B * probability_b + rng.normal(0, observation_noise)
 
             # compute probability of choosing option A
             p_choose_A = np.exp(expected_value_A / choice_temperature) / (

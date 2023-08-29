@@ -80,7 +80,6 @@ def template_experiment(
     A template for synthetic experiments.
 
     Parameters:
-        added_noise: standard deviation of gaussian noise added to output
         random_state: seed for random number generator
     """
 
@@ -101,10 +100,10 @@ def template_experiment(
     # Define experiment runner
     rng = np.random.default_rng(random_state)
 
-    def experiment_runner(conditions: ArrayLike, added_noise: float = 0.1):
+    def experiment_runner(conditions: ArrayLike, observation_noise: float = 0.01):
         """A function which simulates noisy observations."""
         x_ = np.array(conditions)
-        y = x_ + 1.0 + rng.normal(0, added_noise, size=x_.shape)
+        y = x_ + 1.0 + rng.normal(0, observation_noise, size=x_.shape)
         return y
 
     ground_truth = partial(experiment_runner, added_noise=0.0)
