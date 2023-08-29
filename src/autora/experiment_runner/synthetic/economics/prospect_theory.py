@@ -134,7 +134,7 @@ def prospect_theory(
         experiment_data[variables.dependent_variables[0].name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise=0.0)
+    ground_truth = partial(experiment_runner, observation_noise=0.0)
 
     def domain():
         v_a = variables.independent_variables[0].allowed_values

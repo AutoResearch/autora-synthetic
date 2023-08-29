@@ -26,7 +26,7 @@ Examples:
 
     >>> s.ground_truth  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     functools.partial(<function template_experiment.<locals>.experiment_runner at 0x...>,
-                      added_noise=0.0)
+                      observation_noise=0.0)
 
     >>> s.ground_truth(1.)
     2.0
@@ -42,13 +42,13 @@ Examples:
     <function template_experiment.<locals>.experiment_runner at 0x...>
 
     >>> s.experiment_runner(1.)
-    1.8697820493137682
+    1.986978204931377
 
     >>> s.experiment_runner(s.domain())
-    array([[1.01278404],
-           [1.96837574],
-           [2.99831988],
-           [3.91469561]])
+    array([[1.0012784 ],
+           [1.99683757],
+           [2.99983199],
+           [3.99146956]])
 
     >>> s.plotter()
     >>> plt.show()  # doctest: +SKIP
@@ -106,7 +106,7 @@ def template_experiment(
         y = x_ + 1.0 + rng.normal(0, observation_noise, size=x_.shape)
         return y
 
-    ground_truth = partial(experiment_runner, added_noise=0.0)
+    ground_truth = partial(experiment_runner, observation_noise=0.0)
     """A function which simulates perfect observations"""
 
     def domain():

@@ -102,7 +102,7 @@ def weber_fechner_law(
         experiment_data[dv1.name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise=0.0)
+    ground_truth = partial(experiment_runner, observation_noise=0.0)
 
     def domain():
         s1_values = variables.independent_variables[0].allowed_values
