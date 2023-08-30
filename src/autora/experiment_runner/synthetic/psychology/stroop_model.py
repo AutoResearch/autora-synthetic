@@ -169,7 +169,7 @@ def stroop_model(
             )
     
             if self.std > 0:
-                output += np.random.randn(*output.shape) * self.std
+                output += rng.random.randn(*output.shape) * self.std
     
             output_softmaxed = np.exp(output * 1 / self.choice_temperature) / (
                 np.exp(output[0] * 1 / self.choice_temperature)
