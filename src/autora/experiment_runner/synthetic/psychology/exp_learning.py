@@ -15,7 +15,6 @@ def exp_learning(
     maximum_initial_value=0.5,
     lr=0.03,
     p_asymptotic=1.0,
-    added_noise=0.01,
     random_state: Optional[int] = None,
 ):
     """
