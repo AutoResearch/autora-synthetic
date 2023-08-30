@@ -14,6 +14,9 @@ from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )
+from autora.experiment_runner.synthetic.psychophysics.stevens_power_law import (
+    stevens_power_law,
+)
 from autora.experiment_runner.synthetic.psychology.exp_learning import (
     exp_learning,
 )
@@ -25,6 +28,7 @@ all_bundled_models = [
     ("luce_choice_ratio", luce_choice_ratio),
     ("template_experiment", template_experiment),
     ("weber_fechner_law", weber_fechner_law),
+    ("stevens_power_law", stevens_power_law),
 ]
 
 all_bundled_model_names = [b[0] for b in all_bundled_models]
