@@ -42,7 +42,6 @@ def exp_learning(
         maximum_initial_value=maximum_initial_value,
         lr=lr,
         p_asymptotic=p_asymptotic,
-        added_noise=added_noise,
         random_state=random_state,
     )
 
