@@ -84,7 +84,7 @@ def exp_learning(
 
     rng = np.random.default_rng(random_state)
 
-def experiment_runner(
+    def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         observation_noise: float = 0.01,
     ):
