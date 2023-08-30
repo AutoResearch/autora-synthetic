@@ -61,10 +61,11 @@ def stevens_power_law(
 
     rng = np.random.default_rng(random_state)
 
-    def experiment_runner(
-        X: np.ndarray,
-        std: float = 0.01,
+def experiment_runner(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
+        observation_noise: float = 0.01,
     ):
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             y = proportionality_constant * x[0] ** modality_constant + rng.random.normal(0, std)
