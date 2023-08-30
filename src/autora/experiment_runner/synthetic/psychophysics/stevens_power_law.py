@@ -2,6 +2,7 @@ from functools import partial
 from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
