@@ -193,7 +193,7 @@ def experiment_runner(
 
         # Stroop Model according to
         # Cohen, J. D., Dunbar, K. M., McClelland, J. L., & Rohrer, D. (1990). On the control of automatic processes: a parallel distributed processing account of the Stroop effect. Psychological review, 97(3), 332.
-        model = StroopModel(temperature, std=std)
+        model = StroopModel(temperature, std=observation_noise)
 
         for idx, x in enumerate(X):
             # compute regular output
