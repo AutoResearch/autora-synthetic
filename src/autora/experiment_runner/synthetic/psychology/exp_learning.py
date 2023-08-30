@@ -28,7 +28,6 @@ def exp_learning(
         minimum_trial: upper bound for exponential constant
         name: name of the experiment
         resolution: number of allowed values for stimulus
-        added_noise: standard deviation of normally distributed noise added to y-values
         random_state: integer used to seed the random number generator
     """
 
