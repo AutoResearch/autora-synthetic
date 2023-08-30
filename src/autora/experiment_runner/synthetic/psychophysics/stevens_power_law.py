@@ -73,7 +73,7 @@ def experiment_runner(
 
         return Y
 
-    ground_truth = partial(experiment_runner, std=0.0)
+    ground_truth = partial(experiment_runner, observation_noise =0.0)
 
     def domain():
         s_values = variables.independent_variables[0].allowed_values
