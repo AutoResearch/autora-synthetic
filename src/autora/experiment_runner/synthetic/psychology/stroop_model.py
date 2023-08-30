@@ -110,40 +110,22 @@ def stroop_model(
 
     torch.manual_seed(random_state)
 
-    class StroopModel(nn.Module):
+    class StroopModel:
         def __init__(self, choice_temperature, std=0.):
-            super(StroopModel, self).__init__()
-
             self.choice_temperature = choice_temperature
             self.std = std
-
+    
             # define affine transformations
-            self.input_color_hidden_color = nn.Linear(2, 2, bias=False)
-            self.input_word_hidden_word = nn.Linear(2, 2, bias=False)
-            self.hidden_color_output = nn.Linear(2, 2, bias=False)
-            self.hidden_word_output = nn.Linear(2, 2, bias=False)
-            self.task_hidden_color = nn.Linear(2, 2, bias=False)
-            self.task_hidden_word = nn.Linear(2, 2, bias=False)
-
-            self.bias = Variable(torch.ones(1) * -4, requires_grad=False)
-            self.input_color_hidden_color.weight.data = (
-                    torch.FloatTensor([[1, -1], [-1, 1]]) * 2.2
-            )
-            self.hidden_color_output.weight.data = (
-                    torch.FloatTensor([[1, -1], [-1, 1]]) * 1.3
-            )
-
-            self.input_word_hidden_word.weight.data = (
-                    torch.FloatTensor([[1, -1], [-1, 1]]) * 2.6
-            )
-            self.hidden_word_output.weight.data = (
-                    torch.FloatTensor([[1, -1], [-1, 1]]) * 2.5
-            )
-
-            self.task_hidden_color.weight.data = (
-                    torch.FloatTensor([[1.0, 0.0], [1.0, 0]]) * 4
-            )
-            self.task_hidden_word.weight.data = torch.FloatTensor([[0, 1], [0, 1]]) * 4
+            self.input_color_hidden_color = self.init_linear(2, 2)
+            self.input_word_hidden_word = self.init_linear(2, 2)
+            self.hidden_color_output = self.init_linear(2, 2)
+            self.hidden_word_output = self.init_linear(2, 2)
+            self.task_hidden_color = self.init_linear(2, 2)
+            self.task_hidden_word = self.init_linear(2, 2)
+    
+            self.bias = -4
+    
+            self.init_weights()
 
         def forward(self, input):
 
