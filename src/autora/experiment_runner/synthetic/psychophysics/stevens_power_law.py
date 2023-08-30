@@ -29,7 +29,6 @@ def stevens_power_law(
     """
 
     params = dict(
-        added_noise=added_noise,
         name=name,
         resolution=resolution,
         proportionality_constant=proportionality_constant,
