@@ -36,7 +36,6 @@ def task_switching(
         temperature=temperature,
         minimum_task_control=minimum_task_control,
         constant=constant,
-        added_noise=added_noise,
         random_state=random_state,
     )
 
