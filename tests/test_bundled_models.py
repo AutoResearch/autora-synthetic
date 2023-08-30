@@ -17,6 +17,12 @@ from autora.experiment_runner.synthetic.psychology.stroop_model import (
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )
+from autora.experiment_runner.synthetic.psychophysics.stevens_power_law import (
+    stevens_power_law,
+)
+from autora.experiment_runner.synthetic.psychology.exp_learning import (
+    exp_learning,
+)
 from autora.experiment_runner.synthetic.utilities import describe, register, retrieve
 
 all_bundled_models = [
@@ -26,6 +32,8 @@ all_bundled_models = [
     ("template_experiment", template_experiment),
     ("weber_fechner_law", weber_fechner_law),
     ("stroop_model", stroop_model),
+    ("stevens_power_law", stevens_power_law),
+
 ]
 
 all_bundled_model_names = [b[0] for b in all_bundled_models]
