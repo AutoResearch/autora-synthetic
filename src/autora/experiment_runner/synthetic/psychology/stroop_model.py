@@ -2,6 +2,7 @@ from functools import partial
 from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
