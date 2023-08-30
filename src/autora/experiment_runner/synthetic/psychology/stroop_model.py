@@ -125,7 +125,7 @@ def stroop_model(
             self.init_weights()
 
         def init_linear(self, in_features, out_features):
-            return np.random.rand(out_features, in_features) * 0.01
+            return rng.random.rand(out_features, in_features) * 0.01
     
         def init_weights(self):
             self.input_color_hidden_color = self.init_linear(2, 2)
