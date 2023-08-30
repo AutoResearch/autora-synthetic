@@ -13,7 +13,6 @@ def stevens_power_law(
     proportionality_constant=1.0,
     modality_constant=0.8,
     maximum_stimulus_intensity=5.0,
-    added_noise=0.01,
     random_state: Optional[int] = None,
 ):
     """
