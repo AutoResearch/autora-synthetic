@@ -24,7 +24,6 @@ def stevens_power_law(
         modality_constant: power constant
         proportionality_constant: constant multiplier
         maximum_stimulus_intensity: maximum value for stimulus
-        added_noise: standard deviation of normally distributed noise added to y-values
         random_state: integer used to seed the random number generator
 
     """
