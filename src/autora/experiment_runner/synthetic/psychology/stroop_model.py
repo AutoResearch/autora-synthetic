@@ -141,42 +141,42 @@ def stroop_model(
         def sigmoid(self, x):
             return 1 / (1 + np.exp(-x))
         
+
         def forward(self, input):
-
-            input = torch.Tensor(input)
+            input = np.array(input)
             if len(input.shape) <= 1:
-                input = input.view(1, len(input))
-
-            # convert inputs
-            color = torch.zeros(input.shape[0], 2)
-            word = torch.zeros(input.shape[0], 2)
-            task = torch.zeros(input.shape[0], 2)
-
+                input = input.reshape(1, len(input))
+    
+            color = np.zeros((input.shape[0], 2))
+            word = np.zeros((input.shape[0], 2))
+            task = np.zeros((input.shape[0], 2))
+    
             color[:, 0:2] = input[:, 0:2]
             word[:, 0:2] = input[:, 2:4]
             task[:, 0:2] = input[:, 4:6]
-
-            color_hidden = torch.sigmoid(
-                self.input_color_hidden_color(color)
-                + self.task_hidden_color(task)
+    
+            color_hidden = self.sigmoid(
+                np.dot(self.input_color_hidden_color, color.T)
+                + np.dot(self.task_hidden_color, task.T)
                 + self.bias
+            ).T
+    
+            word_hidden = self.sigmoid(
+                np.dot(self.input_word_hidden_word, word.T)
+                + np.dot(self.task_hidden_word, task.T)
+                + self.bias
+            ).T
+    
+            output = np.dot(self.hidden_color_output, color_hidden.T) + np.dot(
+                self.hidden_word_output, word_hidden.T
             )
-
-            word_hidden = torch.sigmoid(
-                self.input_word_hidden_word(word) + self.task_hidden_word(task) + self.bias
-            )
-
-            output = self.hidden_color_output(color_hidden) + self.hidden_word_output(
-                word_hidden
-            )
-
-            # add noise
+    
             if self.std > 0:
-                output += torch.randn(output.shape) * self.std
-
-            output_softmaxed = torch.exp(output * 1 / self.choice_temperature) / (
-                    torch.exp(output[:, 0] * 1 / self.choice_temperature)
-                    + torch.exp(output[:, 1] * 1 / self.choice_temperature)
+                output += np.random.randn(*output.shape) * self.std
+    
+            output_softmaxed = np.exp(output * 1 / self.choice_temperature) / (
+                np.exp(output[0] * 1 / self.choice_temperature)
+                + np.exp(output[1] * 1 / self.choice_temperature)
             )
 
             return output_softmaxed
