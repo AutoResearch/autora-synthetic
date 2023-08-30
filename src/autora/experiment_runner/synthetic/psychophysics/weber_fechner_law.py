@@ -29,7 +29,7 @@ def weber_fechner_law(
     Examples:
         >>> experiment = weber_fechner_law(random_state=42)
 
-        # We can run the runner with numpy arrays or DataFrames. Ther return value will
+        # The runner can accept numpy arrays or pandas DataFrames, but the return value will
         # always be a pandas DataFrame.
         >>> experiment.experiment_runner(np.array([[.1,.2]]))
             S1   S2  difference_detected
