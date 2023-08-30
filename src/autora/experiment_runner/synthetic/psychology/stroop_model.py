@@ -23,7 +23,6 @@ def stroop_model(
         name: name of the experiment
         resolution: number of allowed values for stimulus
         temperature: choice temperature
-        added_noise: standard deviation of normally distributed noise added to y-values
         random_state: integer used to seed the random number generator
     """
 
