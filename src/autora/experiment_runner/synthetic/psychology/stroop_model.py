@@ -3,9 +3,6 @@ from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
-import torch
-import torch.nn as nn
-from torch.autograd import Variable
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
