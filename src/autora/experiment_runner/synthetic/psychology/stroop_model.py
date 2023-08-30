@@ -127,6 +127,20 @@ def stroop_model(
     
             self.init_weights()
 
+        def init_linear(self, in_features, out_features):
+            return np.random.rand(out_features, in_features) * 0.01
+    
+        def init_weights(self):
+            self.input_color_hidden_color = self.init_linear(2, 2)
+            self.hidden_color_output = self.init_linear(2, 2)
+            self.input_word_hidden_word = self.init_linear(2, 2)
+            self.hidden_word_output = self.init_linear(2, 2)
+            self.task_hidden_color = self.init_linear(2, 2)
+            self.task_hidden_word = self.init_linear(2, 2)
+    
+        def sigmoid(self, x):
+            return 1 / (1 + np.exp(-x))
+        
         def forward(self, input):
 
             input = torch.Tensor(input)
