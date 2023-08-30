@@ -27,7 +27,6 @@ def task_switching(
         temperature: temperature for softmax when computing performance of current task
         constant: constant for task activation
         minimum_task_control: minimum task control
-        added_noise: standard deviation of normally distributed noise added to y-values
         random_state: integer used to seed the random number generator
     """
 
