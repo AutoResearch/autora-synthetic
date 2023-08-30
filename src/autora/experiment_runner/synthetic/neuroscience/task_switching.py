@@ -14,7 +14,6 @@ def task_switching(
     temperature=0.2,
     minimum_task_control=0.15,
     constant=1.5,
-    added_noise=0.01,
     random_state: Optional[int] = None,
 ):
     """
