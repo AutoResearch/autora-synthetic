@@ -87,10 +87,11 @@ def task_switching(
         y = 1 / (A * x + B)
         return y
 
-    def experiment_runner(
-        X: np.ndarray,
-        std: float = 0.01,
+def experiment_runner(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
+        observation_noise: float = 0.01,
     ):
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             cur_task_strength = x[0]
