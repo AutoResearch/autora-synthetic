@@ -17,6 +17,9 @@ from autora.experiment_runner.synthetic.neuroscience.task_switching import (
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )
+from autora.experiment_runner.synthetic.psychology.exp_learning import (
+    exp_learning,
+)
 from autora.experiment_runner.synthetic.utilities import describe, register, retrieve
 
 all_bundled_models = [
