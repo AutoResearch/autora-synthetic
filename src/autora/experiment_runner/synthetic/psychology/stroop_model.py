@@ -28,7 +28,6 @@ def stroop_model(
     """
 
     params = dict(
-        added_noise=added_noise,
         name=name,
         resolution=resolution,
         temperature=temperature,
