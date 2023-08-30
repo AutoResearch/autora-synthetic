@@ -87,7 +87,7 @@ def task_switching(
         y = 1 / (A * x + B)
         return y
 
-def experiment_runner(
+    def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         observation_noise: float = 0.01,
     ):
