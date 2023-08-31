@@ -11,6 +11,9 @@ from autora.experiment_runner.synthetic.economics.prospect_theory import prospec
 from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
     luce_choice_ratio,
 )
+from autora.experiment_runner.synthetic.neuroscience.task_switching import (
+    task_switching,
+)
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
 )
