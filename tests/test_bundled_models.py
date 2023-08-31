@@ -13,6 +13,8 @@ from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
 )
 from autora.experiment_runner.synthetic.psychology.stroop_model import (
     stroop_model,
+from autora.experiment_runner.synthetic.neuroscience.task_switching import (
+    task_switching,
 )
 from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
     weber_fechner_law,
