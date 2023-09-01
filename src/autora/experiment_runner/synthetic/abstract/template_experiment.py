@@ -15,7 +15,7 @@ Examples:
     >>> s.name
     'Template Experiment'
 
-    >>> s.variables
+    >>> s.variables # doctest: +ELLIPSIS
     VariableCollection(...)
 
     >>> s.domain()
@@ -25,8 +25,8 @@ Examples:
            [3]])
 
     >>> s.ground_truth  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    functools.partial(<function template_experiment.<locals>.experiment_runner at 0x...>,
-                      added_noise_=0.0)
+    functools.partial(<function template_experiment.<locals>.run at 0x...>,
+                      added_noise=0.0)
 
     >>> s.ground_truth(1.)
     2.0
@@ -38,30 +38,31 @@ Examples:
            [4.]])
 
 
-    >>> s.experiment_runner  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    <function template_experiment.<locals>.experiment_runner at 0x...>
+    >>> s.run  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    <function template_experiment.<locals>.run at 0x...>
 
-    >>> s.experiment_runner(1.)
-    1.8697820493137682
+    >>> s.run(1., random_state=42)
+    2.003047170797544
 
-    >>> s.experiment_runner(s.domain())
-    array([[1.01278404],
-           [1.96837574],
-           [2.99831988],
-           [3.91469561]])
+    >>> s.run(s.domain(), random_state=42)
+    array([[1.00304717],
+           [1.98960016],
+           [3.00750451],
+           [4.00940565]])
 
     >>> s.plotter()
     >>> plt.show()  # doctest: +SKIP
 
     Generate a new version of the experiment with different parameters:
-    >>> new_params = dict(s.params, **dict(random_state=190))
+    >>> new_params = dict(s.params)
     >>> s.factory_function(**new_params)  # doctest: +ELLIPSIS
-    SyntheticExperimentCollection(..., params={..., 'random_state': 190}, ...)
+    SyntheticExperimentCollection(...)
 
 """
 
 
 from functools import partial
+from typing import Optional
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -73,22 +74,17 @@ from autora.variable import DV, IV, VariableCollection
 def template_experiment(
     # Add any configurable parameters with their defaults here:
     name: str = "Template Experiment",
-    added_noise: float = 0.1,
-    random_state: int = 42,
 ):
     """
     A template for synthetic experiments.
 
     Parameters:
-        added_noise: standard deviation of gaussian noise added to output
-        random_state: seed for random number generator
+        name: name of the experiment
     """
 
     params = dict(
         # Include all parameters here:
         name=name,
-        added_noise=added_noise,
-        random_state=random_state,
     )
 
     # Define variables
@@ -100,15 +96,19 @@ def template_experiment(
     )
 
     # Define experiment runner
-    rng = np.random.default_rng(random_state)
 
-    def experiment_runner(x: ArrayLike, added_noise_=added_noise):
+    def run(
+        conditions: ArrayLike,
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
+    ):
         """A function which simulates noisy observations."""
-        x_ = np.array(x)
-        y = x_ + 1.0 + rng.normal(0, added_noise_, size=x_.shape)
+        rng = np.random.default_rng(random_state)
+        x_ = np.array(conditions)
+        y = x_ + 1.0 + rng.normal(0, added_noise, size=x_.shape)
         return y
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(run, added_noise=0.0)
     """A function which simulates perfect observations"""
 
     def domain():
@@ -137,7 +137,7 @@ def template_experiment(
         name=name,
         description=template_experiment.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,

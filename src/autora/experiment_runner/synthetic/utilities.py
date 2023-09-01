@@ -37,11 +37,11 @@ Examples:
     ...     def domain():
     ...         return np.linspace(*x.value_range, resolution).reshape(-1, 1)
     ...
-    ...     def experiment_runner(X, std=0.1):
+    ...     def run(X, std=0.1):
     ...         return np.sin((X - delta) * omega) + (X * m) + rng.normal(0, std, X.shape)
     ...
     ...     def ground_truth(X):
-    ...         return experiment_runner(X, std=0.)
+    ...         return run(X, std=0.)
     ...
     ...     def plotter(model=None):
     ...         plt.plot(domain(), ground_truth(domain()), label="Ground Truth")
@@ -55,7 +55,7 @@ Examples:
     ...         params=params,
     ...         variables=variables,
     ...         domain=domain,
-    ...         experiment_runner=experiment_runner,
+    ...         run=run,
     ...         ground_truth=ground_truth,
     ...         plotter=plotter,
     ...         factory_function=sinusoid_experiment,
@@ -124,7 +124,7 @@ class SyntheticExperimentCollection:
         params: a dictionary with the settable parameters of the model and their respective values
         variables: a VariableCollection describing the variables of the model
         domain: a function which returns all the available X values for the model
-        experiment_runner: a function which takes X values and returns simulated y values **with
+        run: a function which takes X values and returns simulated y values **with
             statistical noise**
         ground_truth: a function which takes X values and returns simulated y values **without any
             statistical noise**
@@ -137,7 +137,7 @@ class SyntheticExperimentCollection:
     params: Optional[Dict] = None
     variables: Optional[VariableCollection] = None
     domain: Optional[Callable] = None
-    experiment_runner: Optional[Callable] = None
+    run: Optional[Callable] = None
     ground_truth: Optional[Callable] = None
     plotter: Optional[Callable[[Optional[_SupportsPredict]], None]] = None
     factory_function: Optional[_SyntheticExperimentFactory] = None

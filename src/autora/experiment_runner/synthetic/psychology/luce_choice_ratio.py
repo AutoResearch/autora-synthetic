@@ -1,6 +1,8 @@
 from functools import partial
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
@@ -8,11 +10,9 @@ from autora.variable import DV, IV, ValueType, VariableCollection
 
 def luce_choice_ratio(
     name="Luce-Choice-Ratio",
-    added_noise=0.01,
     resolution=8,
     maximum_similarity=10,
     focus=0.8,
-    rng=np.random.default_rng(),
 ):
     """
     Luce-Choice-Ratio
@@ -23,7 +23,7 @@ def luce_choice_ratio(
         resolution: number of allowed values for stimulus DVs
         maximum_similarity: upperbound for DVs
         focus: parameter measuring participant focus
-        rng: integer used to seed the random number generator
+        random_state: integer used to seed the random number generator
 
     Shepard-Luce Choice Rule according to:
         - Equation (4) in Logan, G. D., & Gordon, R. D. (2001).
@@ -32,11 +32,8 @@ def luce_choice_ratio(
         - Equation (5) in Luce, R. D. (1963). Detection and recognition.
 
     Examples:
-        First we seed numpy to get replicable results:
-        >>> np.random.seed(42)
-
         We can instantiate a Shepard-Cue Choice Experiment. We use a seed to get replicable results:
-        >>> l_s_experiment = luce_choice_ratio(rng=42)
+        >>> l_s_experiment = luce_choice_ratio()
 
         We can look at the name of the experiment:
         >>> l_s_experiment.name
@@ -44,27 +41,32 @@ def luce_choice_ratio(
 
         To call the ground truth, we can use an attribute of the experiment:
         >>> l_s_experiment.ground_truth(np.array([[1,2,3,4]]))
-        array([[0.21052632]])
+           similarity_category_A1  ...  choose_A1
+        0                       1  ...   0.210526
+        <BLANKLINE>
+        [1 rows x 5 columns]
 
         We can also run an experiment:
-        >>> l_s_experiment.experiment_runner(np.array([[1,2,3,4]]))
-        array([[0.21016246]])
+        >>> l_s_experiment.run(np.array([[1,2,3,4]]), random_state=42)
+           similarity_category_A1  ...  choose_A1
+        0                       1  ...   0.211328
+        <BLANKLINE>
+        [1 rows x 5 columns]
 
         To plot the experiment use:
         >>> l_s_experiment.plotter()
         >>> plt.show()  # doctest: +SKIP
 
     """
+
     minimum_similarity = 1 / maximum_similarity
 
     params = dict(
         name=name,
-        added_noise=added_noise,
         maximum_similarity=maximum_similarity,
         minimum_similarity=minimum_similarity,
         resolution=resolution,
         focus=focus,
-        rng=rng,
     )
 
     similarity_category_A1 = IV(
@@ -121,11 +123,14 @@ def luce_choice_ratio(
         dependent_variables=[choose_A1],
     )
 
-    def experiment_runner(
-        X: np.ndarray,
+    def run(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         focus_: float = focus,
-        added_noise_: float = added_noise,
+        added_noise=0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             similarity_A1 = x[0]
@@ -133,7 +138,7 @@ def luce_choice_ratio(
             similarity_B1 = x[2]
             similarity_B2 = x[3]
 
-            y = (similarity_A1 * focus + np.random.normal(0, added_noise_)) / (
+            y = (similarity_A1 * focus + rng.normal(0, added_noise)) / (
                 similarity_A1 * focus
                 + similarity_A2 * focus
                 + similarity_B1 * (1 - focus_)
@@ -145,10 +150,12 @@ def luce_choice_ratio(
             elif y >= 1:
                 y = 0.9999
             Y[idx] = y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[choose_A1.name] = Y
+        return experiment_data
 
-        return Y
-
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         similarity_A1 = variables.independent_variables[0].allowed_values
@@ -232,7 +239,7 @@ def luce_choice_ratio(
         name=name,
         description=luce_choice_ratio.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,
