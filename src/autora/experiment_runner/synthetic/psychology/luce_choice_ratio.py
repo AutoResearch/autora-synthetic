@@ -13,7 +13,6 @@ def luce_choice_ratio(
     resolution=8,
     maximum_similarity=10,
     focus=0.8,
-    random_state: Optional[int] = None,
 ):
     """
     Luce-Choice-Ratio
@@ -34,7 +33,7 @@ def luce_choice_ratio(
 
     Examples:
         We can instantiate a Shepard-Cue Choice Experiment. We use a seed to get replicable results:
-        >>> l_s_experiment = luce_choice_ratio(random_state=42)
+        >>> l_s_experiment = luce_choice_ratio()
 
         We can look at the name of the experiment:
         >>> l_s_experiment.name
@@ -48,9 +47,9 @@ def luce_choice_ratio(
         [1 rows x 5 columns]
 
         We can also run an experiment:
-        >>> l_s_experiment.experiment_runner(np.array([[1,2,3,4]]))
+        >>> l_s_experiment.run(np.array([[1,2,3,4]]), random_state=42)
            similarity_category_A1  ...  choose_A1
-        0                       1  ...    0.20779
+        0                       1  ...   0.211328
         <BLANKLINE>
         [1 rows x 5 columns]
 
@@ -68,7 +67,6 @@ def luce_choice_ratio(
         minimum_similarity=minimum_similarity,
         resolution=resolution,
         focus=focus,
-        random_state=random_state,
     )
 
     similarity_category_A1 = IV(
@@ -125,13 +123,13 @@ def luce_choice_ratio(
         dependent_variables=[choose_A1],
     )
 
-    rng = np.random.default_rng(random_state)
-
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         focus_: float = focus,
-        observation_noise=0.01,
+        added_noise=0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
@@ -140,7 +138,7 @@ def luce_choice_ratio(
             similarity_B1 = x[2]
             similarity_B2 = x[3]
 
-            y = (similarity_A1 * focus + rng.normal(0, observation_noise)) / (
+            y = (similarity_A1 * focus + rng.normal(0, added_noise)) / (
                 similarity_A1 * focus
                 + similarity_A2 * focus
                 + similarity_B1 * (1 - focus_)
@@ -157,7 +155,7 @@ def luce_choice_ratio(
         experiment_data[choose_A1.name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, observation_noise=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         similarity_A1 = variables.independent_variables[0].allowed_values
@@ -241,7 +239,7 @@ def luce_choice_ratio(
         name=name,
         description=luce_choice_ratio.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,

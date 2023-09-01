@@ -75,7 +75,6 @@ def expected_value_theory(
     resolution=10,
     minimum_value=-1,
     maximum_value=1,
-    random_state: Optional[int] = None,
 ):
     """
     Expected Value Theory
@@ -87,8 +86,6 @@ def expected_value_theory(
         resolution:
         minimum_value:
         maximum_value:
-        random_state:
-
     """
 
     params = dict(
@@ -98,18 +95,18 @@ def expected_value_theory(
         resolution=resolution,
         choice_temperature=choice_temperature,
         value_lambda=value_lambda,
-        random_state=random_state,
     )
 
     variables = get_variables(
         minimum_value=minimum_value, maximum_value=maximum_value, resolution=resolution
     )
-    rng = np.random.default_rng(random_state)
 
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        observation_noise: float = 0.01,
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
@@ -119,8 +116,8 @@ def expected_value_theory(
             probability_a = x[1]
             probability_b = x[3]
 
-            expected_value_A = value_A * probability_a + rng.normal(0, observation_noise)
-            expected_value_B = value_B * probability_b + rng.normal(0, observation_noise)
+            expected_value_A = value_A * probability_a + rng.normal(0, added_noise)
+            expected_value_B = value_B * probability_b + rng.normal(0, added_noise)
 
             # compute probability of choosing option A
             p_choose_A = np.exp(expected_value_A / choice_temperature) / (
@@ -135,7 +132,7 @@ def expected_value_theory(
         experiment_data[variables.dependent_variables[0].name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, observation_noise=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         X = np.array(
@@ -191,7 +188,7 @@ def expected_value_theory(
         name=name,
         description=expected_value_theory.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,

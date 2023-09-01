@@ -7,7 +7,7 @@ Examples:
     ... )
 
     We can instantiate the experiment using the imported function
-    >>> s = template_experiment(random_state=42)
+    >>> s = template_experiment()
     >>> s  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     SyntheticExperimentCollection(name='Template Experiment', description='...',
         params={'name': ...}, ...)
@@ -25,8 +25,8 @@ Examples:
            [3]])
 
     >>> s.ground_truth  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    functools.partial(<function template_experiment.<locals>.experiment_runner at 0x...>,
-                      observation_noise=0.0)
+    functools.partial(<function template_experiment.<locals>.run at 0x...>,
+                      added_noise=0.0)
 
     >>> s.ground_truth(1.)
     2.0
@@ -38,25 +38,25 @@ Examples:
            [4.]])
 
 
-    >>> s.experiment_runner  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    <function template_experiment.<locals>.experiment_runner at 0x...>
+    >>> s.run  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    <function template_experiment.<locals>.run at 0x...>
 
-    >>> s.experiment_runner(1.)
-    1.986978204931377
+    >>> s.run(1., random_state=42)
+    2.003047170797544
 
-    >>> s.experiment_runner(s.domain())
-    array([[1.0012784 ],
-           [1.99683757],
-           [2.99983199],
-           [3.99146956]])
+    >>> s.run(s.domain(), random_state=42)
+    array([[1.00304717],
+           [1.98960016],
+           [3.00750451],
+           [4.00940565]])
 
     >>> s.plotter()
     >>> plt.show()  # doctest: +SKIP
 
     Generate a new version of the experiment with different parameters:
-    >>> new_params = dict(s.params, **dict(random_state=190))
+    >>> new_params = dict(s.params)
     >>> s.factory_function(**new_params)  # doctest: +ELLIPSIS
-    SyntheticExperimentCollection(..., params={..., 'random_state': 190}, ...)
+    SyntheticExperimentCollection(...)
 
 """
 
@@ -74,19 +74,17 @@ from autora.variable import DV, IV, VariableCollection
 def template_experiment(
     # Add any configurable parameters with their defaults here:
     name: str = "Template Experiment",
-    random_state: Optional[int] = None,
 ):
     """
     A template for synthetic experiments.
 
     Parameters:
-        random_state: seed for random number generator
+        name: name of the experiment
     """
 
     params = dict(
         # Include all parameters here:
         name=name,
-        random_state=random_state,
     )
 
     # Define variables
@@ -98,15 +96,19 @@ def template_experiment(
     )
 
     # Define experiment runner
-    rng = np.random.default_rng(random_state)
 
-    def experiment_runner(conditions: ArrayLike, observation_noise: float = 0.01):
+    def run(
+        conditions: ArrayLike,
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
+    ):
         """A function which simulates noisy observations."""
+        rng = np.random.default_rng(random_state)
         x_ = np.array(conditions)
-        y = x_ + 1.0 + rng.normal(0, observation_noise, size=x_.shape)
+        y = x_ + 1.0 + rng.normal(0, added_noise, size=x_.shape)
         return y
 
-    ground_truth = partial(experiment_runner, observation_noise=0.0)
+    ground_truth = partial(run, added_noise=0.0)
     """A function which simulates perfect observations"""
 
     def domain():
@@ -135,7 +137,7 @@ def template_experiment(
         name=name,
         description=template_experiment.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,

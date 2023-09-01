@@ -13,7 +13,6 @@ def weber_fechner_law(
     resolution=100,
     constant=1.0,
     maximum_stimulus_intensity=5.0,
-    random_state: Optional[int] = None,
 ):
     """
     Weber-Fechner Law
@@ -23,21 +22,19 @@ def weber_fechner_law(
         resolution: number of allowed values for stimulus 1 and 2
         constant: constant multiplier
         maximum_stimulus_intensity: maximum value for stimulus 1 and 2
-        added_noise: standard deviation of normally distributed noise added to y-values
-        random_state: integer used to seed the random number generator
 
     Examples:
-        >>> experiment = weber_fechner_law(random_state=42)
+        >>> experiment = weber_fechner_law()
 
         # We can run the runner with numpy arrays or DataFrames. Ther return value will
         # always be a pandas DataFrame.
-        >>> experiment.experiment_runner(np.array([[.1,.2]]))
+        >>> experiment.run(np.array([[.1,.2]]), random_state=42)
             S1   S2  difference_detected
         0  0.1  0.2             0.696194
 
-        >>> experiment.experiment_runner(pd.DataFrame({'S1': [0.1], 'S2': [0.2]}))
+        >>> experiment.run(pd.DataFrame({'S1': [0.1], 'S2': [0.2]}), random_state=42)
             S1   S2  difference_detected
-        0  0.1  0.2             0.682747
+        0  0.1  0.2             0.696194
 
     """
 
@@ -46,7 +43,6 @@ def weber_fechner_law(
         resolution=resolution,
         constant=constant,
         maximum_stimulus_intensity=maximum_stimulus_intensity,
-        random_state=random_state,
     )
 
     iv1 = IV(
@@ -84,17 +80,17 @@ def weber_fechner_law(
         dependent_variables=[dv1],
     )
 
-    rng = np.random.default_rng(random_state)
-
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        observation_noise=0.01,
+        added_noise=0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
 
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            y = constant * np.log(x[1] / x[0]) + rng.normal(0, observation_noise)
+            y = constant * np.log(x[1] / x[0]) + rng.normal(0, added_noise)
             Y[idx] = y
 
         experiment_data = pd.DataFrame(conditions)
@@ -102,7 +98,7 @@ def weber_fechner_law(
         experiment_data[dv1.name] = Y
         return experiment_data
 
-    ground_truth = partial(experiment_runner, observation_noise=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         s1_values = variables.independent_variables[0].allowed_values
@@ -161,7 +157,7 @@ def weber_fechner_law(
         name=name,
         description=weber_fechner_law.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,
