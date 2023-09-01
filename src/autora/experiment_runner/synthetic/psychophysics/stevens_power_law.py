@@ -14,7 +14,6 @@ def stevens_power_law(
     proportionality_constant=1.0,
     modality_constant=0.8,
     maximum_stimulus_intensity=5.0,
-    random_state: Optional[int] = None,
 ):
     """
     Stevens' Power Law
@@ -25,8 +24,6 @@ def stevens_power_law(
         modality_constant: power constant
         proportionality_constant: constant multiplier
         maximum_stimulus_intensity: maximum value for stimulus
-        random_state: integer used to seed the random number generator
-
     """
 
     params = dict(
@@ -35,16 +32,17 @@ def stevens_power_law(
         proportionality_constant=proportionality_constant,
         modality_constant=modality_constant,
         maximum_stimulus_intensity=maximum_stimulus_intensity,
-        random_state=random_state,
     )
 
     iv1 = IV(
         name="S",
-        allowed_values=np.linspace(1 / resolution, maximum_stimulus_intensity, resolution),
+        allowed_values=np.linspace(
+            1 / resolution, maximum_stimulus_intensity, resolution
+        ),
         value_range=(1 / resolution, maximum_stimulus_intensity),
         units="intensity",
         variable_label="Stimulus Intensity",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     dv1 = DV(
@@ -52,7 +50,7 @@ def stevens_power_law(
         value_range=(0, maximum_stimulus_intensity),
         units="sensation",
         variable_label="Perceived Intensity",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     variables = VariableCollection(
@@ -60,21 +58,23 @@ def stevens_power_law(
         dependent_variables=[dv1],
     )
 
-    rng = np.random.default_rng(random_state)
-
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        observation_noise: float = 0.01,
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            y = proportionality_constant * x[0] ** modality_constant + rng.random.normal(0, std)
+            y = proportionality_constant * x[
+                0
+            ] ** modality_constant + rng.random.normal(0, added_noise)
             Y[idx] = y
 
         return Y
 
-    ground_truth = partial(experiment_runner, observation_noise =0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         s_values = variables.independent_variables[0].allowed_values
@@ -85,8 +85,8 @@ def stevens_power_law(
     def plotter(
         model=None,
     ):
-        import matplotlib.pyplot as plt
         import matplotlib.colors as mcolors
+        import matplotlib.pyplot as plt
 
         colors = mcolors.TABLEAU_COLORS
         col_keys = list(colors.keys())
@@ -95,7 +95,7 @@ def stevens_power_law(
         plt.plot(X, y, label="Original", c=colors[col_keys[0]])
         if model is not None:
             y = model.predict(X)
-            plt.plot(X, y, label=f"Recovered", c=colors[col_keys[0]], linestyle="--")
+            plt.plot(X, y, label="Recovered", c=colors[col_keys[0]], linestyle="--")
         x_limit = [0, variables.independent_variables[0].value_range[1]]
         y_limit = [0, 4]
         x_label = "Stimulus Intensity"
@@ -113,7 +113,7 @@ def stevens_power_law(
         name=name,
         description=stevens_power_law.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,
