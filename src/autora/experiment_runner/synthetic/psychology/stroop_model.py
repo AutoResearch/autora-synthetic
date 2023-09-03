@@ -257,7 +257,7 @@ def stroop_model(
         name=name,
         description=stroop_model.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,
