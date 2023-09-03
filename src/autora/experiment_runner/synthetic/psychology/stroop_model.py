@@ -20,7 +20,6 @@ def stroop_model(
         name: name of the experiment
         resolution: number of allowed values for stimulus
         temperature: choice temperature
-        random_state: integer used to seed the random number generator
     """
 
     params = dict(
