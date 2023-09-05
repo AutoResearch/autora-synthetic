@@ -102,7 +102,6 @@ def stroop_model(
         dependent_variables=[response_green],
     )
 
-    rng = np.random.default_rng(random_state)
 
     class StroopModel:
         def __init__(self, choice_temperature, std=0.):
