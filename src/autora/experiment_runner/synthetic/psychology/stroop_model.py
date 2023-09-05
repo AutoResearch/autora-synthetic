@@ -177,6 +177,7 @@ def stroop_model(
     def experiment_runner(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         observation_noise: float = 0.01,
+   random_state: Optional[int] = None
     ):
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
