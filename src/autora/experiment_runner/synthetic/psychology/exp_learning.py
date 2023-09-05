@@ -1,7 +1,8 @@
 from functools import partial
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
@@ -15,7 +16,6 @@ def exp_learning(
     maximum_initial_value=0.5,
     lr=0.03,
     p_asymptotic=1.0,
-    random_state: Optional[int] = None,
 ):
     """
     Exponential Learning
@@ -28,7 +28,6 @@ def exp_learning(
         minimum_trial: upper bound for exponential constant
         name: name of the experiment
         resolution: number of allowed values for stimulus
-        random_state: integer used to seed the random number generator
     """
 
     maximum_trial = resolution
@@ -42,31 +41,26 @@ def exp_learning(
         maximum_initial_value=maximum_initial_value,
         lr=lr,
         p_asymptotic=p_asymptotic,
-        random_state=random_state,
     )
 
     p_initial = IV(
         name="P_asymptotic",
-        allowed_values=np.linspace(minimum_initial_value,
-                                   maximum_initial_value,
-                                   resolution),
-        value_range=(minimum_initial_value,
-                     maximum_initial_value),
+        allowed_values=np.linspace(
+            minimum_initial_value, maximum_initial_value, resolution
+        ),
+        value_range=(minimum_initial_value, maximum_initial_value),
         units="performance",
         variable_label="Asymptotic Performance",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     trial = IV(
         name="trial",
-        allowed_values=np.linspace(minimum_trial,
-                                   maximum_trial,
-                                   resolution),
-        value_range=(minimum_trial,
-                     maximum_trial),
+        allowed_values=np.linspace(minimum_trial, maximum_trial, resolution),
+        value_range=(minimum_trial, maximum_trial),
         units="trials",
         variable_label="Trials",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     performance = DV(
@@ -74,7 +68,7 @@ def exp_learning(
         value_range=(0, p_asymptotic),
         units="performance",
         variable_label="Performance",
-        type=ValueType.REAL
+        type=ValueType.REAL,
     )
 
     variables = VariableCollection(
@@ -82,12 +76,12 @@ def exp_learning(
         dependent_variables=[performance],
     )
 
-    rng = np.random.default_rng(random_state)
-
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        observation_noise: float = 0.01,
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
 
@@ -95,17 +89,22 @@ def exp_learning(
         # Heathcote, A., Brown, S., & Mewhort, D. J. (2000). The power law repealed:
         # The case for an exponential law of practice. Psychonomic bulletin & review, 7(2), 185–207.
 
-        # Thurstone, L. L. (1919). The learning curve equation. Psy- chological Monographs, 26(3), i.
+        # Thurstone, L. L. (1919). The learning curve equation.
+        # Psy- chological Monographs, 26(3), i.
 
         for idx, x in enumerate(X):
             p_initial_exp = x[0]
             trial_exp = x[1]
-            y = p_asymptotic - (p_asymptotic - p_initial_exp) * np.exp(- lr * trial_exp) + rng.random.normal(0, std)
+            y = (
+                p_asymptotic
+                - (p_asymptotic - p_initial_exp) * np.exp(-lr * trial_exp)
+                + rng.random.normal(0, added_noise)
+            )
             Y[idx] = y
 
         return Y
 
-    ground_truth = partial(experiment_runner, observation_noise=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         p_initial_values = variables.independent_variables[0].allowed_values
@@ -149,7 +148,7 @@ def exp_learning(
         name=name,
         description=exp_learning.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,

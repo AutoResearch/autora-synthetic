@@ -1,6 +1,8 @@
 from functools import partial
+from typing import Optional, Union
 
 import numpy as np
+import pandas as pd
 
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
@@ -73,8 +75,6 @@ def expected_value_theory(
     resolution=10,
     minimum_value=-1,
     maximum_value=1,
-    added_noise: float = 0.01,
-    random_state: int = 180,
 ):
     """
     Expected Value Theory
@@ -86,9 +86,6 @@ def expected_value_theory(
         resolution:
         minimum_value:
         maximum_value:
-        added_noise:
-        random_state:
-
     """
 
     params = dict(
@@ -98,17 +95,19 @@ def expected_value_theory(
         resolution=resolution,
         choice_temperature=choice_temperature,
         value_lambda=value_lambda,
-        added_noise=added_noise,
-        random_state=random_state,
     )
-
-    rng = np.random.default_rng(random_state)
 
     variables = get_variables(
         minimum_value=minimum_value, maximum_value=maximum_value, resolution=resolution
     )
 
-    def experiment_runner(X: np.ndarray, added_noise_=added_noise):
+    def run(
+        conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
+        added_noise: float = 0.01,
+        random_state: Optional[int] = None,
+    ):
+        rng = np.random.default_rng(random_state)
+        X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
             value_A = value_lambda * x[0]
@@ -117,8 +116,8 @@ def expected_value_theory(
             probability_a = x[1]
             probability_b = x[3]
 
-            expected_value_A = value_A * probability_a + rng.normal(0, added_noise_)
-            expected_value_B = value_B * probability_b + rng.normal(0, added_noise_)
+            expected_value_A = value_A * probability_a + rng.normal(0, added_noise)
+            expected_value_B = value_B * probability_b + rng.normal(0, added_noise)
 
             # compute probability of choosing option A
             p_choose_A = np.exp(expected_value_A / choice_temperature) / (
@@ -128,9 +127,12 @@ def expected_value_theory(
 
             Y[idx] = p_choose_A
 
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
-    ground_truth = partial(experiment_runner, added_noise_=0.0)
+    ground_truth = partial(run, added_noise=0.0)
 
     def domain():
         X = np.array(
@@ -186,7 +188,7 @@ def expected_value_theory(
         name=name,
         description=expected_value_theory.__doc__,
         variables=variables,
-        experiment_runner=experiment_runner,
+        run=run,
         ground_truth=ground_truth,
         domain=domain,
         plotter=plotter,
