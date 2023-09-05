@@ -8,6 +8,12 @@ from autora.experiment_runner.synthetic.economics.expected_value_theory import (
     expected_value_theory,
 )
 from autora.experiment_runner.synthetic.economics.prospect_theory import prospect_theory
+from autora.experiment_runner.synthetic.psychology.luce_choice_ratio import (
+    luce_choice_ratio,
+)
+from autora.experiment_runner.synthetic.psychology.stroop_model import (
+    stroop_model,
+)
 from autora.experiment_runner.synthetic.neuroscience.task_switching import (
     task_switching,
 )
@@ -29,6 +35,7 @@ all_bundled_models = [
     ("luce_choice_ratio", luce_choice_ratio),
     ("template_experiment", template_experiment),
     ("weber_fechner_law", weber_fechner_law),
+    ("stroop_model", stroop_model),
     ("stevens_power_law", stevens_power_law),
     ("task_switching", task_switching),
     ("exp_learning", exp_learning),
