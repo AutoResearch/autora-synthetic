@@ -179,6 +179,7 @@ def stroop_model(
         observation_noise: float = 0.01,
    random_state: Optional[int] = None
     ):
+        rng = np.random.default_rng(random_state)
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
 
