@@ -26,7 +26,6 @@ def stroop_model(
         name=name,
         resolution=resolution,
         temperature=temperature,
-        random_state=random_state,
     )
 
     color_green = IV(
