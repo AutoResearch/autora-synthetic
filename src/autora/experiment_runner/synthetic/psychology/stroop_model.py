@@ -176,7 +176,7 @@ def stroop_model(
 
     def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
-        observation_noise: float = 0.01,
+        added_noise: float = 0.01,
    random_state: Optional[int] = None
     ):
         rng = np.random.default_rng(random_state)
