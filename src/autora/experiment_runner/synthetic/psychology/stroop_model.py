@@ -174,7 +174,7 @@ def stroop_model(
 
             return output_softmaxed
 
-    def experiment_runner(
+    def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         observation_noise: float = 0.01,
    random_state: Optional[int] = None
