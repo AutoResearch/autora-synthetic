@@ -17,7 +17,7 @@ def task_switching(
     constant=1.5,
 ):
     """
-    Task Switchng
+    Task Switching
 
     Args:
         name: name of the experiment
