@@ -2,26 +2,16 @@
 
 Synthetic experiment data for testing AutoRA theorists and experimentalists. 
 
-## Quickstart Guide
+## Overview
 
-You will need:
+| Name | Category | Links |
+|---|---|---|
+| Linear mixed model | Abstract | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/abstract/llm/) |
+| Expected Value Theory | Economics | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/economics/expected_value_theory/) |
+| Prospect theory | Economics | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/economics/prospect_theory/) |
+| Task Switching | Neuroscience | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/neuroscience/task_switching/) |
+| Exponential Learning | Psychology | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/psychology/exp_learning/) |
+| Luce-Choice-Ratio | Psychology | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/psychology/luce_choice_ratio/) |
+| Stevens' Power Law | Psychophysics | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/psychophysics/stevens_power_law/) |
+| Weber-Fechner Law | Psychophysics | [Ref](https://autoresearch.github.io/autora/reference/autora/experiment_runner/synthetic/psychophysics/weber_fechner_law/) |
 
-- `python` 3.8 or greater: [https://www.python.org/downloads/](https://www.python.org/downloads/)
-
-Install the synthetic data package:
-
-```shell
-pip install -U "autora"
-```
-
-!!! success
-    It is recommended to use a `python` environment manager like `virtualenv`.
-
-Print a description of the prospect theory model by Kahneman and Tversky by running:
-```shell
-python -c "
-from autora.experiment_runner.synthetic.economics.prospect_theory import prospect_theory
-study = prospect_theory()
-print(study.description)
-"
-```
