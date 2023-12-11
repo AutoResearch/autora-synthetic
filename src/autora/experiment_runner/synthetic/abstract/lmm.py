@@ -234,7 +234,7 @@ def lmm_experiment(
                 part = part.strip()
                 std_dev = random_effects[group_var].get(part, 0.5)
                 random_effect_values = {group: rng_.normal(0, std_dev) for group in experiment_data[group_var].unique()}
-                if part == '1':  # Random intercept
+                if part == 'Intercept':  # Random intercept
                     if has_intercept:
                         experiment_data[dependent_var] += experiment_data[group_var].map(random_effect_values)
                 else:  # Random slopes
