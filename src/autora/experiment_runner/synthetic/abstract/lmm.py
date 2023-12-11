@@ -230,6 +230,7 @@ def lmm_experiment(
 
             # Process each part of the random effect (intercept and slopes)
             for part in random_effects_.split('+'):
+                part = 'Intercept' if part == '1' else part
                 part = part.strip()
                 std_dev = random_effects[group_var].get(part, 0.5)
                 random_effect_values = {group: rng_.normal(0, std_dev) for group in experiment_data[group_var].unique()}
