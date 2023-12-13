@@ -68,12 +68,12 @@ Examples:
     2  1.0        2
     >>> experiment.ground_truth(conditions=conditions,random_state=42)
         x1  subject        rt
-    0  0.0        1  1.152359
-    1  0.5        1  2.152359
-    2  1.0        1  3.152359
-    0  0.0        2  0.480008
-    1  0.5        2  1.480008
-    2  1.0        2  2.480008
+    0  0.0        1  1.030472
+    1  0.5        1  2.030472
+    2  1.0        1  3.030472
+    0  0.0        2  0.896002
+    1  0.5        2  1.896002
+    2  1.0        2  2.896002
 
     >>> formula = 'rt ~ (x1|subject)'
     >>> random_effects = {'subject': {'x1': .1}}
@@ -100,28 +100,46 @@ Examples:
     1  0.5        2  0.494800
     2  1.0        2  0.989600
 
-    
+    >>> formula = 'y ~ x1 + x2 + (1 + x1|subject) + (x2|group)'
+    >>> fixed_effects = {'Intercept': 1.5, 'x1': 2.0, 'x2': -1.2}
+    >>> random_effects = {
+    ...        'subject': {'1': 0.5, 'x1': 0.3},
+    ...        'group': {'x2': 0.4}
+    ...    }
+    >>> experiment = lmm_experiment(formula=formula, fixed_effects=fixed_effects,random_effects=random_effects)
+    >>> n_samples = 10
+    >>> rng = np.random.default_rng(0)
+    >>> conditions = pd.DataFrame({
+    ...        'x1': rng.normal(0, 1, n_samples),
+    ...        'x2': rng.normal(0, 1, n_samples),
+    ...        'subject': rng.choice(['A', 'B', 'C', 'D'], n_samples),
+    ...        'group': rng.choice(['E', 'F', 'G', 'H'], n_samples)
+    ...    })
+    >>> experiment.ground_truth(conditions=conditions, random_state=42)
+             x1        x2 subject group         y
+    0  0.125730 -0.623274       B     H  2.502995
+    1 -0.132105  0.041326       A     F  1.258294
+    2  0.640423 -2.325031       A     F  5.490146
+    3  0.104900 -0.218792       A     H  1.899763
+    4 -0.535669 -1.245911       A     H  2.173576
+    5  0.361595 -0.732267       C     H  2.923207
+    6  1.304000 -0.544259       C     F  4.320545
+    7  0.947081 -0.316300       C     G  3.405867
+    8 -0.703735  0.411631       B     H -0.578950
+    9 -1.265421  1.042513       C     G -1.794523
 
-
-
-
-    # >>> formula = 'y ~ x1 + x2 + (1 + x1|subject) + (x2|group)'
-    # >>> fixed_effects = {'Intercept': 1.5, 'x1': 2.0, 'x2': -1.2}
-    # >>> random_effects = {
-    # ...        'subject': {'1': 0.5, 'x1': 0.3},
-    # ...        'group': {'x2': 0.4}
-    # ...    }
-    # >>> experiment = lmm_experiment(formula=formula, fixed_effects=fixed_effects,random_effects=random_effects)
-    # >>> n_samples = 10
-    # >>> conditions = pd.DataFrame({
-    # ...        'x1': np.random.normal(0, 1, n_samples),
-    # ...        'x2': np.random.normal(0, 1, n_samples),
-    # ...        'subject': np.random.choice(['A', 'B', 'C', 'D'], n_samples),
-    # ...        'group': np.random.choice(['E', 'F', 'G', 'H'], n_samples)
-    # ...    })
-    # >>> experiment.ground_truth(conditions=conditions, random_state=42)
-
-    # >>> experiment.run(conditions=conditions, added_noise=.1, random_state=42)
+    >>> experiment.run(conditions=conditions, added_noise=.1, random_state=42)
+             x1        x2 subject group         y
+    0  0.125730 -0.623274       B     H  2.417691
+    1 -0.132105  0.041326       A     F  1.346234
+    2  0.640423 -2.325031       A     F  5.567925
+    3  0.104900 -0.218792       A     H  1.906366
+    4 -0.535669 -1.245911       A     H  2.286300
+    5  0.361595 -0.732267       C     H  2.969958
+    6  1.304000 -0.544259       C     F  4.234616
+    7  0.947081 -0.316300       C     G  3.442742
+    8 -0.703735  0.411631       B     H -0.674839
+    9 -1.265421  1.042513       C     G -1.706678
 
 """
 
