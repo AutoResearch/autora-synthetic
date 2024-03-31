@@ -4,6 +4,9 @@ from hypothesis import strategies as st
 from autora.experiment_runner.synthetic.abstract.template_experiment import (
     template_experiment,
 )
+
+from autora.experiment_runner.synthetic.abstract.data import data_experiment
+
 from autora.experiment_runner.synthetic.economics.expected_value_theory import (
     expected_value_theory,
 )
@@ -24,6 +27,7 @@ from autora.experiment_runner.synthetic.psychophysics.weber_fechner_law import (
 from autora.experiment_runner.synthetic.utilities import describe, register, retrieve
 
 all_bundled_models = [
+    ("data_experiment", data_experiment),
     ("expected_value_theory", expected_value_theory),
     ("prospect_theory", prospect_theory),
     ("luce_choice_ratio", luce_choice_ratio),
