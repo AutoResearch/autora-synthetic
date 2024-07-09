@@ -42,7 +42,7 @@ Examples:
     <function template_experiment.<locals>.run at 0x...>
 
     >>> s.run(1., random_state=42)
-    2.003047170797544
+    np.float64(2.003047170797544)
 
     >>> s.run(s.domain(), random_state=42)
     array([[1.00304717],
