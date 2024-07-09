@@ -136,12 +136,24 @@ def q_learning(
         # The runner can accept numpy arrays or pandas DataFrames, but the return value will
         # always be a list of numpy arrays. Each array corresponds to the choices made by the agent
         # for each trial in the input. Thus, arrays have shape (n_trials, n_actions).
-        >>> experiment.run(np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]]))
+        >>> experiment.run(np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]]), random_state=42)
+        [array([[1., 0.],
+               [0., 1.],
+               [0., 1.],
+               [0., 1.],
+               [1., 0.],
+               [1., 0.]])]
 
         # The runner can accept pandas DataFrames. Each cell of the DataFrame should contain a
         # numpy array with shape (n_trials, n_actions). The return value will be a list of numpy
         # arrays, each corresponding to the choices made by the agent for each trial in the input.
-        >>> experiment.run(pd.DataFrame({'reward array': [[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]]}))
+        >>> experiment.run(pd.DataFrame({'reward array': [np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]])]}), random_state = 42)
+        [array([[1., 0.],
+               [0., 1.],
+               [0., 1.],
+               [0., 1.],
+               [1., 0.],
+               [1., 0.]])]
     """
 
     params = dict(
@@ -202,6 +214,9 @@ def q_learning(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         random_state: Optional[int] = None,
     ):
+
+        if random_state is not None:
+            np.random.seed(random_state)
 
         Y = list()
         if isinstance(conditions, pd.DataFrame):
