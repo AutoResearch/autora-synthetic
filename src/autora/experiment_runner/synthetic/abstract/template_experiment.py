@@ -29,7 +29,7 @@ Examples:
                       added_noise=0.0)
 
     >>> s.ground_truth(1.)
-    2.0
+    np.float64(2.0)
 
     >>> s.ground_truth(s.domain())
     array([[1.],
