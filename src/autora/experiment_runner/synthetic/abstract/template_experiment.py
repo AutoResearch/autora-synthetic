@@ -28,8 +28,8 @@ Examples:
     functools.partial(<function template_experiment.<locals>.run at 0x...>,
                       added_noise=0.0)
 
-    >>> np.float64(s.ground_truth(1.))
-    np.float64(2.0)
+    >>> float(s.ground_truth(1.))
+    2.0
 
     >>> s.ground_truth(s.domain())
     array([[1.],
@@ -41,8 +41,8 @@ Examples:
     >>> s.run  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     <function template_experiment.<locals>.run at 0x...>
 
-    >>> np.float64(s.run(1., random_state=42))
-    np.float64(2.003047170797544)
+    >>> float(s.run(1., random_state=42))
+    2.003047170797544
 
     >>> s.run(s.domain(), random_state=42)
     array([[1.00304717],
