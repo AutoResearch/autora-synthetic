@@ -193,6 +193,7 @@ def q_learning(
         num_trials = rewards.shape[0]
 
         y = np.zeros(rewards.shape)
+        choice_proba = np.zeros(rewards.shape)
 
         agent = AgentQ(
             alpha=learning_rate,
@@ -204,29 +205,40 @@ def q_learning(
         )
 
         for i in range(num_trials):
+            proba = agent.get_choice_probs()
             choice = agent.get_choice()
             y[i, choice] = 1
+            choice_proba[i] = proba
             reward = rewards[i, choice]
             agent.update(choice, reward)
-        return y
+        return y, choice_proba
 
     def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         random_state: Optional[int] = None,
+        return_choice_probabilities = False,
     ):
 
         if random_state is not None:
             np.random.seed(random_state)
 
         Y = list()
+        Y_proba = list()
         if isinstance(conditions, pd.DataFrame):
             for index, session in conditions.iterrows():
                 rewards = session[0]
-                Y.append(run_AgentQ(rewards))
+                choice, choice_proba = run_AgentQ(rewards)
+                Y.append(choice)
+                Y_proba.append(choice_proba)
         elif isinstance(conditions, np.ndarray):
-            Y.append(run_AgentQ(conditions))
+            choice, choice_proba = run_AgentQ(conditions)
+            Y.append(choice)
+            Y_proba.append(choice_proba)
 
-        return Y
+        if return_choice_probabilities:
+            return Y, Y_proba
+        else:
+            return Y
 
     ground_truth = partial(run)
 
@@ -244,4 +256,5 @@ def q_learning(
         factory_function=q_learning,
     )
     return collection
+
 
