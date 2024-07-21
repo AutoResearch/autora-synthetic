@@ -37,7 +37,8 @@ Examples:
     >>> formula_2 = 'rt ~ x1'
     >>> fixed_effects_2 = {'x1': 2.}
     >>> experiment_2 = lmm_experiment(formula=formula_2,fixed_effects=fixed_effects_2)
-    >>> experiment_1.ground_truth(conditions=conditions) == experiment_2.ground_truth(conditions=conditions)
+    >>> experiment_1.ground_truth(conditions=conditions) ==\
+experiment_2.ground_truth(conditions=conditions)
          x1    rt
     0  True  True
     1  True  True
@@ -48,7 +49,9 @@ Examples:
     >>> formula = 'rt ~ 1 + (1|subject) + x1'
     >>> fixed_effects = {'Intercept': 1, 'x1': 2}
     >>> random_effects = {'subject': {'Intercept': .1}}
-    >>> experiment = lmm_experiment(formula=formula,fixed_effects=fixed_effects,random_effects=random_effects)
+    >>> experiment = lmm_experiment(formula=formula,
+    ...                             fixed_effects=fixed_effects,
+    ...                             random_effects=random_effects)
     >>> conditions_1 = pd.DataFrame({
     ...     'x1':np.linspace(0, 1, 3),
     ...     'subject': np.repeat(1, 3)
@@ -90,7 +93,9 @@ Examples:
     >>> formula = 'rt ~ (x1|subject) + x1'
     >>> fixed_effects = {'x1': 1.}
     >>> random_effects = {'subject': {'x1': .01}}
-    >>> experiment = lmm_experiment(formula=formula,fixed_effects=fixed_effects,random_effects=random_effects)
+    >>> experiment = lmm_experiment(formula=formula,
+    ...                             fixed_effects=fixed_effects,
+    ...                             random_effects=random_effects)
     >>> experiment.ground_truth(conditions=conditions,random_state=42)
         x1  subject        rt
     0  0.0        1  0.000000
@@ -106,7 +111,9 @@ Examples:
     ...        'subject': {'1': 0.5, 'x1': 0.3},
     ...        'group': {'x2': 0.4}
     ...    }
-    >>> experiment = lmm_experiment(formula=formula, fixed_effects=fixed_effects,random_effects=random_effects)
+    >>> experiment = lmm_experiment(formula=formula,
+    ...                             fixed_effects=fixed_effects,
+    ...                             random_effects=random_effects)
     >>> n_samples = 10
     >>> rng = np.random.default_rng(0)
     >>> conditions = pd.DataFrame({
@@ -143,10 +150,9 @@ Examples:
 
 """
 
-
-from functools import partial
-from typing import Optional, List
 import re
+from functools import partial
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -173,7 +179,7 @@ def lmm_experiment(
         fixed_effects: dictionary describing the fixed effects (Intercept and slopes)
         random_effects: nested dictionary describing the random effects of slopes and intercept.
             These are standard deviasions in a normal distribution with a mean of zero.
-        X: Independent variable descriptions. Used to add allowed values 
+        X: Independent variable descriptions. Used to add allowed values
     """
 
     if not fixed_effects:
@@ -186,17 +192,17 @@ def lmm_experiment(
         name=name,
         formula=formula,
         fixed_effects=fixed_effects,
-        random_effects=random_effects
+        random_effects=random_effects,
     )
 
     dependent, fixed_variables, random_variables = _extract_variable_names(formula)
 
     dependent = DV(name=dependent)
-    x = [IV(name=f) for f in fixed_variables] + [IV(name=r) for r in random_variables]
+    # x = [IV(name=f) for f in fixed_variables] + [IV(name=r) for r in random_variables]
+    #
+    # if X:
+    #     x = X
 
-    if X:
-        x = X
-    
     variables = VariableCollection(
         independent_variables=[X],
         dependent_variables=[dependent],
@@ -216,28 +222,32 @@ def lmm_experiment(
             rng_ = np.random.default_rng(random_state)
         else:
             rng_ = rng  # use the RNG from the outer scope
-        
-        
-        dependent_var, rhs = formula.split('~')
+
+        dependent_var, rhs = formula.split("~")
         dependent_var = dependent_var.strip()
         fixed_vars = fixed_variables
-        
 
         # Check for the presence of an intercept in the formula
-        has_intercept = True if '1' in fixed_effects or re.search(r'\b0\b', rhs) is None else False
+        has_intercept = (
+            True if "1" in fixed_effects or re.search(r"\b0\b", rhs) is None else False
+        )
 
         experiment_data = conditions.copy()
 
         # Initialize the dependent variable
-        experiment_data[dependent_var] = fixed_effects.get('Intercept', 0) if has_intercept else 0
+        experiment_data[dependent_var] = (
+            fixed_effects.get("Intercept", 0) if has_intercept else 0
+        )
 
         # Add fixed effects
         for var in fixed_vars:
             if var in experiment_data.columns:
-                experiment_data[dependent_var] += fixed_effects.get(var, 0) * experiment_data[var]
+                experiment_data[dependent_var] += (
+                    fixed_effects.get(var, 0) * experiment_data[var]
+                )
 
         # Process each random effect term
-        random_effect_terms = re.findall(r'\((.+?)\|(.+?)\)', formula)
+        random_effect_terms = re.findall(r"\((.+?)\|(.+?)\)", formula)
         for term in random_effect_terms:
             random_effects_, group_var = term
             group_var = group_var.strip()
@@ -247,25 +257,36 @@ def lmm_experiment(
                 raise ValueError(f"Group variable '{group_var}' not found in the data")
 
             # Process each part of the random effect (intercept and slopes)
-            for part in random_effects_.split('+'):
-                part = 'Intercept' if part == '1' else part
+            for part in random_effects_.split("+"):
+                part = "Intercept" if part == "1" else part
                 part = part.strip()
                 std_dev = random_effects[group_var].get(part, 0.5)
-                random_effect_values = {group: rng_.normal(0, std_dev) for group in experiment_data[group_var].unique()}
-                if part == 'Intercept':  # Random intercept
+                random_effect_values = {
+                    group: rng_.normal(0, std_dev)
+                    for group in experiment_data[group_var].unique()
+                }
+                if part == "Intercept":  # Random intercept
                     if has_intercept:
-                        experiment_data[dependent_var] += experiment_data[group_var].map(random_effect_values)
+                        experiment_data[dependent_var] += experiment_data[
+                            group_var
+                        ].map(random_effect_values)
                 else:  # Random slopes
                     if part in experiment_data.columns:
-                        experiment_data[dependent_var] += experiment_data[group_var].map(random_effect_values) * experiment_data[part]
+                        experiment_data[dependent_var] += (
+                            experiment_data[group_var].map(random_effect_values)
+                            * experiment_data[part]
+                        )
 
         # Add noise
-        experiment_data[dependent_var] += rng_.normal(0, added_noise, len(experiment_data))
+        experiment_data[dependent_var] += rng_.normal(
+            0, added_noise, len(experiment_data)
+        )
 
         return experiment_data
 
     ground_truth = partial(run, added_noise=0.0)
-    """A function which simulates perfect observations. This still uses random values for random effects."""
+    """A function which simulates perfect observations.
+    This still uses random values for random effects."""
 
     def domain():
         """A function which returns all possible independent variable values as a 2D array."""
@@ -279,9 +300,9 @@ def lmm_experiment(
         plt.figure()
         dom = domain()
         data = ground_truth(dom)
-        
-        y = data[depedent]
-        x = data.drop(depenent, axis=1)
+
+        y = data[dependent]
+        x = data.drop(dependent, axis=1)
 
         if x.shape[1] > 2:
             Exception(
@@ -332,7 +353,8 @@ def _extract_variable_names(formula):
     formula (str): Formula specifying the model, e.g., 'y ~ x1 + x2 + (1 + x1|group) + (x2|subject)'
 
     Returns:
-    tuple of (list, list): A tuple containing two lists - one for fixed effects and another for random effects.
+    tuple of (list, list): A tuple containing two lists - one for fixed effects and another for
+    random effects.
     Examples:
         >>> formula_1 = 'y ~ x1 + x2 + (1 + x1|group) + (x2|subject)'
         >>> _extract_variable_names(formula_1)
@@ -349,19 +371,24 @@ def _extract_variable_names(formula):
 
     """
     # Extract the right-hand side of the formula
-    dependent, rhs = formula.split('~')
+    dependent, rhs = formula.split("~")
     dependent = dependent.strip()
 
-    fixed_effects = re.findall(r'[a-z]\w*(?![^\(]*\))', rhs)  # Matches variables outside parentheses
-    random_effects = re.findall(r'\(([^\|]+)\|([^\)]+)\)', rhs)  # Matches random effects groups
+    fixed_effects = re.findall(
+        r"[a-z]\w*(?![^\(]*\))", rhs
+    )  # Matches variables outside parentheses
+    random_effects = re.findall(
+        r"\(([^\|]+)\|([^\)]+)\)", rhs
+    )  # Matches random effects groups
 
     # Include variables from random effects in fixed effects and make unique
     for reffect in random_effects:
-        fixed_effects.extend(reffect[0].replace('1 + ', '').split('+'))
-    
+        fixed_effects.extend(reffect[0].replace("1 + ", "").split("+"))
+
     # Removing duplicates and stripping whitespaces
     fixed_effects = sorted(list(set([effect.strip() for effect in fixed_effects])))
-    random_groups = sorted(list(set([reffect[1].strip() for reffect in random_effects])))
-
+    random_groups = sorted(
+        list(set([reffect[1].strip() for reffect in random_effects]))
+    )
 
     return dependent, fixed_effects, random_groups

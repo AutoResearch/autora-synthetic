@@ -7,10 +7,13 @@ import pandas as pd
 from autora.experiment_runner.synthetic.utilities import SyntheticExperimentCollection
 from autora.variable import DV, IV, ValueType, VariableCollection
 
+
 def _check_in_0_1_range(x, name):
-  if not (0 <= x <= 1):
-    raise ValueError(
-        f'Value of {name} must be in [0, 1] range. Found value of {x}.')
+    if not (0 <= x <= 1):
+        raise ValueError(
+            f"Value of {name} must be in [0, 1] range. Found value of {x}."
+        )
+
 
 class AgentQ:
     """An agent that runs simple Q-learning for an n-armed bandits tasks.
@@ -22,13 +25,13 @@ class AgentQ:
     """
 
     def __init__(
-            self,
-            alpha: float = 0.2,
-            beta: float = 3.,
-            n_actions: int = 2,
-            forget_rate: float = 0.,
-            perseverance_bias: float = 0.,
-            correlated_reward: bool = False,
+        self,
+        alpha: float = 0.2,
+        beta: float = 3.0,
+        n_actions: int = 2,
+        forget_rate: float = 0.0,
+        perseverance_bias: float = 0.0,
+        correlated_reward: bool = False,
     ):
         """Update the agent after one step of the task.
 
@@ -49,8 +52,8 @@ class AgentQ:
         self._q_init = 0.5
         self.new_sess()
 
-        _check_in_0_1_range(alpha, 'alpha')
-        _check_in_0_1_range(forget_rate, 'forget_rate')
+        _check_in_0_1_range(alpha, "alpha")
+        _check_in_0_1_range(forget_rate, "forget_rate")
 
     def new_sess(self):
         """Reset the agent for the beginning of a new session."""
@@ -69,9 +72,7 @@ class AgentQ:
         choice = np.random.choice(self._n_actions, p=choice_probs)
         return choice
 
-    def update(self,
-               choice: int,
-               reward: float):
+    def update(self, choice: int, reward: float):
         """Update the agent after one step of the task.
 
         Args:
@@ -82,15 +83,17 @@ class AgentQ:
         # Forgetting - restore q-values of non-chosen actions towards the initial value
         non_chosen_action = np.arange(self._n_actions) != choice
         self._q[non_chosen_action] = (1 - self._forget_rate) * self._q[
-            non_chosen_action] + self._forget_rate * self._q_init
+            non_chosen_action
+        ] + self._forget_rate * self._q_init
 
         # Reward-based update - Update chosen q for chosen action with observed reward
-        q_reward_update = - self._alpha * self._q[choice] + self._alpha * reward
+        q_reward_update = -self._alpha * self._q[choice] + self._alpha * reward
 
         # Correlated update - Update non-chosen q for non-chosen action with observed reward
         if self._correlated_reward:
             # index_correlated_update = self._n_actions - choice - 1
-            # self._q[index_correlated_update] = (1 - self._alpha) * self._q[index_correlated_update] + self._alpha * (1 - reward)
+            # self._q[index_correlated_update] =
+            # (1 - self._alpha) * self._q[index_correlated_update] + self._alpha * (1 - reward)
             # alternative implementation - not dependent on reward but on reward-based update
             index_correlated_update = self._n_actions - 1 - choice
             self._q[index_correlated_update] -= 0.5 * q_reward_update
@@ -111,10 +114,10 @@ class AgentQ:
 def q_learning(
     name="Q-Learning",
     learning_rate: float = 0.2,
-    decision_noise: float = 3.,
+    decision_noise: float = 3.0,
     n_actions: int = 2,
-    forget_rate: float = 0.,
-    perseverance_bias: float = 0.,
+    forget_rate: float = 0.0,
+    perseverance_bias: float = 0.0,
     correlated_reward: bool = False,
 ):
     """
@@ -136,7 +139,8 @@ def q_learning(
         # The runner can accept numpy arrays or pandas DataFrames, but the return value will
         # always be a list of numpy arrays. Each array corresponds to the choices made by the agent
         # for each trial in the input. Thus, arrays have shape (n_trials, n_actions).
-        >>> experiment.run(np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]]), random_state=42)
+        >>> experiment.run(np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]]),
+        ...                random_state=42)
         [array([[1., 0.],
                [0., 1.],
                [0., 1.],
@@ -147,7 +151,10 @@ def q_learning(
         # The runner can accept pandas DataFrames. Each cell of the DataFrame should contain a
         # numpy array with shape (n_trials, n_actions). The return value will be a list of numpy
         # arrays, each corresponding to the choices made by the agent for each trial in the input.
-        >>> experiment.run(pd.DataFrame({'reward array': [np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]])]}), random_state = 42)
+        >>> experiment.run(
+        ...     pd.DataFrame(
+        ...         {'reward array': [np.array([[0, 1], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0]])]}),
+        ...     random_state = 42)
         [array([[1., 0.],
                [0., 1.],
                [0., 1.],
@@ -159,12 +166,12 @@ def q_learning(
     params = dict(
         name=name,
         trials=100,
-        learning_rate = learning_rate,
-        decision_noise = decision_noise,
-        n_actions = n_actions,
-        forget_rate = forget_rate,
-        perseverance_bias = perseverance_bias,
-        correlated_reward = correlated_reward,
+        learning_rate=learning_rate,
+        decision_noise=decision_noise,
+        n_actions=n_actions,
+        forget_rate=forget_rate,
+        perseverance_bias=perseverance_bias,
+        correlated_reward=correlated_reward,
     )
 
     iv1 = IV(
@@ -187,9 +194,11 @@ def q_learning(
     )
 
     def run_AgentQ(rewards):
-        if (rewards.shape[1] != n_actions):
-            Warning("Number of actions in rewards does not match n_actions. Will use " + str(rewards.shape[1]
-                                                                                             + " actions."))
+        if rewards.shape[1] != n_actions:
+            Warning(
+                "Number of actions in rewards does not match n_actions. Will use "
+                + str(rewards.shape[1] + " actions.")
+            )
         num_trials = rewards.shape[0]
 
         y = np.zeros(rewards.shape)
@@ -216,9 +225,8 @@ def q_learning(
     def run(
         conditions: Union[pd.DataFrame, np.ndarray, np.recarray],
         random_state: Optional[int] = None,
-        return_choice_probabilities = False,
+        return_choice_probabilities=False,
     ):
-
         if random_state is not None:
             np.random.seed(random_state)
 
@@ -256,5 +264,3 @@ def q_learning(
         factory_function=q_learning,
     )
     return collection
-
-
