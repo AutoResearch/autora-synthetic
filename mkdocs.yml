@@ -5,5 +5,6 @@ site_name: AutoRA Synthetic Data
 repo_url: 'https://github.com/AutoResearch/autora-synthetic'
 
 nav:
-- Introduction: 'index.md'
+- Home: 'index.md'
+- Quickstart: 'quickstart.md'
 - Example: 'Example.ipynb'
