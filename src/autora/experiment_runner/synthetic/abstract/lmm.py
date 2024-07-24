@@ -152,7 +152,7 @@ experiment_2.ground_truth(conditions=conditions)
 
 import re
 from functools import partial
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 import numpy as np
 import pandas as pd
@@ -166,9 +166,9 @@ def lmm_experiment(
     formula: str,
     fixed_effects: Optional[dict] = None,
     random_effects: Optional[dict] = None,
-    X: Optional[List[IV]] = None,
+    X: Optional[Sequence[IV]] = None,
     random_state: Optional[int] = None,
-    name: str = "Template Experiment",
+    name: str = "Linear Mixed Model Experiment",
 ):
     """
     A linear mixed model synthetic experiments.
@@ -198,20 +198,21 @@ def lmm_experiment(
     dependent, fixed_variables, random_variables = _extract_variable_names(formula)
 
     dependent = DV(name=dependent)
-    # x = [IV(name=f) for f in fixed_variables] + [IV(name=r) for r in random_variables]
-    #
-    # if X:
-    #     x = X
+    if not X:
+        independent = [IV(name=iv) for iv in fixed_variables+random_variables]
+    else:
+        if set([x.name for x in X]) != set(fixed_variables + random_variables):
+            raise Exception("Variable names in formula don't match given variable names")
+        independent = X
 
     variables = VariableCollection(
-        independent_variables=[X],
+        independent_variables=independent,
         dependent_variables=[dependent],
     )
 
     rng = np.random.default_rng(random_state)
 
     # Define experiment runner
-
     def run(
         conditions: pd.DataFrame,
         added_noise=0.01,
@@ -232,7 +233,13 @@ def lmm_experiment(
             True if "1" in fixed_effects or re.search(r"\b0\b", rhs) is None else False
         )
 
-        experiment_data = conditions.copy()
+        if not isinstance(conditions, pd.DataFrame):
+            _conditions = np.array(conditions)
+            _conditions = pd.DataFrame(_conditions)
+            _conditions.columns = [iv.name for iv in variables.independent_variables]
+        else:
+            _conditions = conditions
+        experiment_data = _conditions.copy()
 
         # Initialize the dependent variable
         experiment_data[dependent_var] = (
@@ -301,8 +308,8 @@ def lmm_experiment(
         dom = domain()
         data = ground_truth(dom)
 
-        y = data[dependent]
-        x = data.drop(dependent, axis=1)
+        y = data[dependent.name]
+        x = data.drop(dependent.name, axis=1)
 
         if x.shape[1] > 2:
             Exception(
