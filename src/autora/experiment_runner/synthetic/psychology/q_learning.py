@@ -253,6 +253,9 @@ def q_learning(
     def domain():
         return None
 
+    def plotter():
+        raise NotImplementedError
+
     collection = SyntheticExperimentCollection(
         name=name,
         description=q_learning.__doc__,
@@ -260,6 +263,7 @@ def q_learning(
         run=run,
         ground_truth=ground_truth,
         domain=domain,
+        plotter=plotter,
         params=params,
         factory_function=q_learning,
     )
