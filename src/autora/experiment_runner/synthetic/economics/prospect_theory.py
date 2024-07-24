@@ -40,6 +40,11 @@ def prospect_theory(
     Probability function according to:
         A. Tversky, D. Kahneman, Advances in prospect theory: Cumulative representation of
         uncertainty. J. Risk Uncertain. 5, 297–323 (1992). doi:10.1007/BF00122574
+    Examples:
+        >>> s = prospect_theory()
+        >>> s.run(np.array([[.9,.1,.1,.9]]), random_state=42)
+           V_A  P_A  V_B  P_B  choose_A
+        0  0.9  0.1  0.1  0.9  0.709777
 
     """
 

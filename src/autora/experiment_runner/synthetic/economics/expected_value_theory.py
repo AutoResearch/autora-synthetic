@@ -86,6 +86,11 @@ def expected_value_theory(
         resolution:
         minimum_value:
         maximum_value:
+        Examples:
+            >>> s = expected_value_theory()
+            >>> s.run(np.array([[1,2,.1,.9]]), random_state=42)
+               V_A  P_A  V_B  P_B  choose_A
+            0  1.0  2.0  0.1  0.9  0.999938
     """
 
     params = dict(

@@ -24,6 +24,11 @@ def stevens_power_law(
         modality_constant: power constant
         proportionality_constant: constant multiplier
         maximum_stimulus_intensity: maximum value for stimulus
+    Examples:
+        >>> s = stevens_power_law()
+        >>> s.run(np.array([[.9]]), random_state=42)
+             S  perceived_intensity
+        0  0.9             0.922213
     """
 
     params = dict(
@@ -69,10 +74,12 @@ def stevens_power_law(
         for idx, x in enumerate(X):
             y = proportionality_constant * x[
                 0
-            ] ** modality_constant + rng.random.normal(0, added_noise)
+            ] ** modality_constant + rng.normal(0, added_noise)
             Y[idx] = y
-
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
     ground_truth = partial(run, added_noise=0.0)
 
