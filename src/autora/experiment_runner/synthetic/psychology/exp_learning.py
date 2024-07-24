@@ -28,6 +28,11 @@ def exp_learning(
         minimum_trial: upper bound for exponential constant
         name: name of the experiment
         resolution: number of allowed values for stimulus
+        Examples:
+        >>> s = exp_learning()
+        >>> s.run(np.array([[.2,.1]]), random_state=42)
+           P_asymptotic  trial  performance
+        0           0.2    0.1     0.205444
     """
 
     maximum_trial = resolution
@@ -98,11 +103,14 @@ def exp_learning(
             y = (
                 p_asymptotic
                 - (p_asymptotic - p_initial_exp) * np.exp(-lr * trial_exp)
-                + rng.random.normal(0, added_noise)
+                + rng.normal(0, added_noise)
             )
             Y[idx] = y
 
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
     ground_truth = partial(run, added_noise=0.0)
 

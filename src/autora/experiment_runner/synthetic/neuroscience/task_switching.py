@@ -26,6 +26,11 @@ def task_switching(
         temperature: temperature for softmax when computing performance of current task
         constant: constant for task activation
         minimum_task_control: minimum task control
+    Examples:
+        >>> s = task_switching()
+        >>> s.run(np.array([[.5,.7,0]]), random_state=42)
+           cur_task_strength  alt_task_strength  is_switch  cur_task_performance
+        0                0.5                0.7        0.0              0.685351
     """
 
     params = dict(
@@ -107,13 +112,13 @@ def task_switching(
                 cur_task_strength
                 + priming_default * (1 - is_switch)
                 + cur_task_control
-                + rng.random.normal(0, added_noise)
+                + rng.normal(0, added_noise)
             )
 
             alt_task_input = (
                 alt_task_strength
                 + priming_default * (is_switch)
-                + rng.random.normal(0, added_noise)
+                + rng.normal(0, added_noise)
             )
 
             cur_task_activation = 1 - np.exp(-constant * cur_task_input)
@@ -125,8 +130,10 @@ def task_switching(
             )
 
             Y[idx] = cur_task_performance
-
-        return Y
+        experiment_data = pd.DataFrame(conditions)
+        experiment_data.columns = [v.name for v in variables.independent_variables]
+        experiment_data[variables.dependent_variables[0].name] = Y
+        return experiment_data
 
     ground_truth = partial(run, added_noise=0.0)
 
