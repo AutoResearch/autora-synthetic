@@ -72,9 +72,9 @@ def stevens_power_law(
         X = np.array(conditions)
         Y = np.zeros((X.shape[0], 1))
         for idx, x in enumerate(X):
-            y = proportionality_constant * x[
-                0
-            ] ** modality_constant + rng.normal(0, added_noise)
+            y = proportionality_constant * x[0] ** modality_constant + rng.normal(
+                0, added_noise
+            )
             Y[idx] = y
         experiment_data = pd.DataFrame(conditions)
         experiment_data.columns = [v.name for v in variables.independent_variables]

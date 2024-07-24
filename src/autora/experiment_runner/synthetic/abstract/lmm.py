@@ -152,7 +152,7 @@ experiment_2.ground_truth(conditions=conditions)
 
 import re
 from functools import partial
-from typing import List, Optional, Sequence
+from typing import Optional, Sequence
 
 import numpy as np
 import pandas as pd
@@ -199,10 +199,12 @@ def lmm_experiment(
 
     dependent = DV(name=dependent)
     if not X:
-        independent = [IV(name=iv) for iv in fixed_variables+random_variables]
+        independent = [IV(name=iv) for iv in fixed_variables + random_variables]
     else:
         if set([x.name for x in X]) != set(fixed_variables + random_variables):
-            raise Exception("Variable names in formula don't match given variable names")
+            raise Exception(
+                "Variable names in formula don't match given variable names"
+            )
         independent = X
 
     variables = VariableCollection(
