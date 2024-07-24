@@ -73,7 +73,7 @@ def task_switching(
         name="cur_task_performance",
         value_range=(0, 1),
         units="performance",
-        variable_label="Accuray of Current Task",
+        variable_label="Accuracy of Current Task",
         type=ValueType.PROBABILITY,
     )
 
@@ -140,9 +140,10 @@ def task_switching(
     def domain():
         s1_values = variables.independent_variables[0].allowed_values
         s2_values = variables.independent_variables[1].allowed_values
-        X = np.array(np.meshgrid(s1_values, s2_values)).T.reshape(-1, 2)
+        is_switch_values = variables.independent_variables[2].allowed_values
+        X = np.array(np.meshgrid(s1_values, s2_values, is_switch_values)).T.reshape(-1, 3)
         # remove all combinations where s1 > s2
-        X = X[X[:, 0] <= X[:, 1]]
+        # X = X[X[:, 0] <= X[:, 1]]
         return X
 
     def plotter(
@@ -176,12 +177,12 @@ def task_switching(
         # X[3, 2] = 0.38  # current task control
         X[3, 2] = 0  # is switch
 
-        y = ground_truth(X, priming_constant=0.3, std=0)
+        y = ground_truth(X)
 
-        word_switch_performance = y[0, 0]
-        word_repetition_performance = y[1, 0]
-        color_switch_performance = y[2, 0]
-        color_repetition_performance = y[3, 0]
+        word_switch_performance = y.at[0, 'cur_task_performance']
+        word_repetition_performance = y.at[1, 'cur_task_performance']
+        color_switch_performance = y.at[2, 'cur_task_performance']
+        color_repetition_performance = y.at[3, 'cur_task_performance']
 
         x_data = [1, 2]
         word_performance = (
