@@ -7,4 +7,18 @@ repo_url: 'https://github.com/AutoResearch/autora-synthetic'
 nav:
 - Home: 'index.md'
 - Quickstart: 'quickstart.md'
-- Example: 'Example.ipynb'
+- Example:
+    - Abstract:
+        - 'Examples/Abstract/LMM.ipynb'
+    - Economics:
+        - 'Examples/Economics/Expected-Value-Theory.ipynb'
+        - 'Examples/Economics/Prospect-Theory.ipynb'
+    - Neuroscience:
+        - 'Examples/Neuroscience/Task-Switching.ipynb'
+    - Psychology:
+        - 'Examples/Psychology/Exponential-Learning.ipynb'
+        - 'Examples/Psychology/Luce-Choice-Ratio.ipynb'
+        - 'Examples/Psychology/Q-Learning.ipynb'
+    - Psychophysics:
+        - 'Examples/Psychophysics/Weber-Fechner-Law.ipynb'
+
