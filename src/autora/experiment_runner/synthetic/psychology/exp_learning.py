@@ -133,11 +133,13 @@ def exp_learning(
             X[:, 0] = P_0
             X[:, 1] = trial.allowed_values
 
-            y = ground_truth(X, std=0)
-            plt.plot(trial, y, label=f"$P_0 = {P_0}$ (Original)")
+            dvs = [dv.name for dv in variables.dependent_variables]
+            y = ground_truth(X)[dvs]
+
+            plt.plot(trial.allowed_values, y, label=f"$P_0 = {P_0}$ (Original)")
             if model is not None:
                 y = model.predict(X)
-                plt.plot(trial, y, label=f"$P_0 = {P_0}$ (Recovered)", linestyle="--")
+                plt.plot(trial.allowed_values, y, label=f"$P_0 = {P_0}$ (Recovered)", linestyle="--")
 
         x_limit = [0, variables.independent_variables[1].value_range[1]]
         y_limit = [0, 1]
