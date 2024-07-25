@@ -124,7 +124,7 @@ def weber_fechner_law(
             S0 = S0_value + np.zeros(delta_S.shape)
             S1 = S0 + delta_S
             X = np.array([S0, S1]).T
-            y = ground_truth(X)
+            y = ground_truth(X)[dv1.name]
             plt.plot(
                 delta_S,
                 y,
