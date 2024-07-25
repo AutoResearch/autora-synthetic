@@ -98,7 +98,7 @@ def stevens_power_law(
         colors = mcolors.TABLEAU_COLORS
         col_keys = list(colors.keys())
         X = domain()
-        y = ground_truth(X)
+        y = ground_truth(X)[dv1.name]
         plt.plot(X, y, label="Original", c=colors[col_keys[0]])
         if model is not None:
             y = model.predict(X)
