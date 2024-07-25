@@ -205,7 +205,7 @@ def luce_choice_ratio(
             X[:, 2] = similarity_B1
             X[:, 3] = similarity_B2
 
-            y = ground_truth(X)
+            y = ground_truth(X)[choose_A1.name]
             plt.plot(
                 similarity_A1.reshape((len(similarity_A1), 1)),
                 y,
