@@ -161,7 +161,7 @@ def expected_value_theory(
             X[:, 2] = v_b
             X[:, 3] = p_b
 
-            y = ground_truth(X)
+            y = ground_truth(X)[variables.dependent_variables[0].name]
             colors = mcolors.TABLEAU_COLORS
             col_keys = list(colors.keys())
             plt.plot(
